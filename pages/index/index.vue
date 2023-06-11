@@ -12,7 +12,7 @@
 			<view class="product-model">
 				<view class="nav-menu">
 					<scroll-view class="scroll-box" scroll-y="true">
-						<view class="nav-item" :class="item == 1 ? 'active' : ''" v-for="item in 50">{{item}}</view>
+						<view class="nav-item" :class="item == 1 ? 'active' : ''" v-for="item in 50">导航{{item}}</view>
 					</scroll-view>
 				</view>
 				<view class="products">
@@ -27,7 +27,7 @@
 							</u-sticky>
 							<view class="product-content">
 								<view class="pro-item" v-for="pro in 3">
-									<product-item />
+									<product-item></product-item>
 								</view>
 							</view>
 						</view>
@@ -64,7 +64,7 @@
 				height: 100rpx;
 				background: #fff;
 				padding: 0 30rpx;
-				border-bottom: 1px solid $border-color;
+				border-bottom: 1rpx solid $border-color;
 
 				>.delivery {}
 
@@ -82,9 +82,9 @@
 				.nav-menu {
 					height: 100%;
 					width: 190rpx;
-					border-right: 1px solid $border-color;
+					border-right: 1rpx solid $border-color;
 					background: $page-bg-color;
-
+					flex-shrink: 0;
 					.scroll-box {
 						height: 100%;
 
