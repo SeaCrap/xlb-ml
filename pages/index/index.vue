@@ -2,11 +2,36 @@
 	<view class="wrapper">
 		<custom-hearder />
 		<view class="content">
-			<view class="infoModel">
+			<view class="info-model">
 				<view class="delivery">免费配送</view>
 				<view class="my-order">
 					<u-icon name="calendar" color="#576b95" size="23"></u-icon>
 					我的订单
+				</view>
+			</view>
+			<view class="product-model">
+				<view class="nav-menu">
+					<scroll-view class="scroll-box" scroll-y="true">
+						<view class="nav-item" :class="item == 1 ? 'active' : ''" v-for="item in 50">{{item}}</view>
+					</scroll-view>
+				</view>
+				<view class="products">
+					<view class="search-bar">
+						<u-icon name="search" size="22" color="#576b95"></u-icon>
+						搜索
+					</view>
+					<scroll-view class="scroll-box" scroll-y="true">
+						<view class="product-list" v-for="item in 5">
+							<u-sticky :customNavHeight="0" zIndex="2">
+								<view class="product-title">产品列表{{item}}</view>
+							</u-sticky>
+							<view class="product-content">
+								<view class="pro-item" v-for="pro in 3">
+									<product-item />
+								</view>
+							</view>
+						</view>
+					</scroll-view>
 				</view>
 			</view>
 		</view>
@@ -15,35 +40,113 @@
 
 <script>
 	export default {
-	
+
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.wrapper {
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
+
 		.content {
 			flex: 1;
-			background: $border-color-light;
+			background: #fff;
 			border-radius: 20rpx 20rpx 0 0;
 			margin-top: -20rpx;
 			position: relative;
 			z-index: 2;
 			overflow: hidden;
-			.infoModel {
-				@include flex-box()
-				color: $text-font-color-1;
+
+			.info-model {
+				@include flex-box() color: $text-font-color-1;
 				height: 100rpx;
 				background: #fff;
 				padding: 0 30rpx;
-				.delivery {}
-				.my-order {
-					@include flex-box()
-					color: $brand-theme-color-aux;
-					.calendar {
-						
+				border-bottom: 1px solid $border-color;
+
+				>.delivery {}
+
+				>.my-order {
+					@include flex-box() color: $brand-theme-color-aux;
+
+					>.calendar {}
+				}
+			}
+
+			.product-model {
+				height: calc(100% - 100rpx);
+				@include flex-box();
+
+				.nav-menu {
+					height: 100%;
+					width: 190rpx;
+					border-right: 1px solid $border-color;
+					background: $page-bg-color;
+
+					.scroll-box {
+						height: 100%;
+
+						.nav-item {
+							font-size: 30rpx;
+							padding-left: 30rpx;
+							line-height: 100rpx;
+							color: $text-font-color-2;
+							position: relative;
+
+							&.active {
+								color: $text-font-color-1;
+								background: #fff;
+
+								&::after {
+									content: '';
+									width: 6rpx;
+									height: 30rpx;
+									background: $brand-theme-color;
+									position: absolute;
+									left: 0;
+									top: 50%;
+									transform: translateY(-50%);
+								}
+							}
+						}
+					}
+				}
+
+				.products {
+					flex: 1;
+					height: 100%;
+					position: relative;
+					
+					.search-bar {
+						position: absolute;
+						top: 0;
+						right: 30rpx;
+						z-index: 3;
+						@include flex-box-set();
+						height: 90rpx;
+						color: $brand-theme-color-aux;
+					}
+					
+					.scroll-box {
+						height: 100%;
+
+						.product-list {
+							padding: 0 30rpx;
+
+							.product-title {
+								line-height: 90rpx;
+								font-size: 30rpx;
+								background: #fff;
+							}
+
+							.product-content {
+								.pro-item {
+									padding: 10rpx 0;
+								}
+							}
+						}
 					}
 				}
 			}
