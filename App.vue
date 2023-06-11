@@ -14,4 +14,7 @@
 
 <style lang="scss">
 	@import "uview-ui/index.scss";
+	view,text {
+		box-sizing: border-box;
+	}
 </style>
