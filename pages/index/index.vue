@@ -25,7 +25,7 @@
 						<u-icon name="search" size="22" color="#576b95"></u-icon>
 						搜索
 					</view>
-					<scroll-view class="scroll-box" scroll-with-animation 
+					<scroll-view class="scroll-box" scroll-with-animation @scroll="proScrollEnt"
 					:scroll-top="proScrollVal" scroll-y>
 						<view class="product-list" v-for="item in 20">
 							<u-sticky :customNavHeight="0" zIndex="2">
@@ -57,12 +57,12 @@
 		},
 		onLoad() {
 			this.$nextTick(()=>{
-				this.getProHeightArr()
+				this.getHeightArr()
 			})	
 		},
 		methods: {
 			clickNav(index){
-				if(this.navIdex === index) return
+				if(this.activeIndex === index) return
 				this.activeIndex = index
 				if(this.timeout){clearTimeout(this.timeout)}
 				this.timeout = setTimeout(() => {
@@ -71,16 +71,22 @@
 				}, 100)
 			},
 			// 获取滚动位置信息
-			getProHeightArr(){
+			getHeightArr(){
 				let selectorQuery = uni.createSelectorQuery()
 				// 获取 nav 滚动位置信息 
 				selectorQuery.selectAll(".nav-item").boundingClientRect(rects=>{
-					this.navHeightArr = rects.map(item => item.top - 190)
+					this.navHeightArr = rects.map(item => item.top - 200)
 				}).exec()
 				// 获取 product 滚动位置信息
 				selectorQuery.selectAll(".product-list").boundingClientRect(rects=>{
-					this.proHeightArr = rects.map(item => item.top - 150)
+					this.proHeightArr = rects.map(item => item.top - 200)
 				}).exec()
+			},
+			proScrollEnt(e){
+				let scrollTop = e.detail.scrollTop
+				let idx = this.proHeightArr.findIndex((value,index,arr)=> scrollTop>=value && scrollTop<arr[index+1])
+				this.activeIndex = idx
+				this.menuScrollVal = this.navHeightArr[idx]
 			}
 		}
 	}
@@ -167,7 +173,7 @@
 						right: 30rpx;
 						z-index: 3;
 						@include flex-box-set();
-						height: 90rpx;
+						height: 100rpx;
 						color: $brand-theme-color-aux;
 					}
 					
@@ -176,16 +182,16 @@
 
 						.product-list {
 							padding: 0 30rpx;
-
+							
 							.product-title {
-								line-height: 90rpx;
+								line-height: 100rpx;
 								font-size: 30rpx;
-								background: #fff;
+								background: #fff;								
 							}
 
 							.product-content {
 								.pro-item {
-									padding: 10rpx 0;
+									
 								}
 							}
 						}
