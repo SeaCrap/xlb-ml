@@ -62,23 +62,25 @@
 		},
 		methods: {
 			clickNav(index){
-				this.activeIndex = index,
-				this.menuScrollVal = this.navHeightArr[index]
-				this.proScrollVal = this.proHeightArr[index]
+				if(this.navIdex === index) return
+				this.activeIndex = index
+				if(this.timeout){clearTimeout(this.timeout)}
+				this.timeout = setTimeout(() => {
+					this.menuScrollVal = this.navHeightArr[index]
+					this.proScrollVal = this.proHeightArr[index]
+				}, 100)
 			},
 			// 获取滚动位置信息
 			getProHeightArr(){
 				let selectorQuery = uni.createSelectorQuery()
 				// 获取 nav 滚动位置信息 
 				selectorQuery.selectAll(".nav-item").boundingClientRect(rects=>{
-					this.navHeightArr = rects.map(item => item.top - 150)
+					this.navHeightArr = rects.map(item => item.top - 190)
 				}).exec()
 				// 获取 product 滚动位置信息
 				selectorQuery.selectAll(".product-list").boundingClientRect(rects=>{
 					this.proHeightArr = rects.map(item => item.top - 150)
 				}).exec()
-				console.log(this.navHeightArr)
-				console.log(this.proHeightArr)
 			}
 		}
 	}
