@@ -1,18 +1,34 @@
 <template>
-	<view class="card-wrapper">
-		<view class="content">
-			<view class="card-pic">
-				<view class="icon" hover-class="iconhover" hover-start-time="50">
-					<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
-					<view class="num">1</view>
+	<view>
+		<view class="card-wrapper">
+			<view class="cart-Pop-ups">
+				<view class="head">
+					<view class="text">已选商品</view>
+					<view class="empty">清空</view>
 				</view>
-				<view class="price">合计<text class="amount">￥10.90</text></view>
+				<scroll-view scroll-y="true" class="body">
+					<view class="scroll-content">
+						<view class="cart-item" v-for="item in 10">123456</view>
+					</view>
+				</scroll-view>
 			</view>
-			<view class="submit-button">
-				<view class="btn disabled" v-if="true">选好了</view>
-				<view class="btn" v-else>支付</view>
+			<view class="content">
+				<view class="card-pic">
+					<view class="icon" hover-class="iconhover" hover-start-time="50">
+						<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
+						<view class="num">1</view>
+					</view>
+					<view class="price">合计<text class="amount">￥10.90</text></view>
+				</view>
+				<view class="submit-button">
+					<view class="btn disabled" v-if="true">选好了</view>
+					<view class="btn" v-else>支付</view>
+				</view>
 			</view>
+			<!-- ios 安全区域	 -->
+			<view class="safe-area-bottom"></view>
 		</view>
+		<u-overlay :show="true" z-index="9"></u-overlay>
 	</view>
 </template>
 
@@ -29,6 +45,27 @@
 
 <style lang="scss" scoped>
 .card-wrapper {
+	position: relative;
+	z-index: 10;
+	.cart-Pop-ups {
+		border-bottom: 1px solid $border-color-light;
+		padding: 30rpx 30rpx 0;
+		border-radius: 20rpx 20rpx 0 0;
+		background: #fff;
+		.head {
+			@include flex-box()
+			color: $text-font-color-3;
+			padding: 25rpx 0;
+			>.text {}
+			>.empty {color: $brand-theme-color-aux;}
+		}
+		.body {
+			
+			.scroll-content {
+				.cart-item {}
+			}
+		}
+	}
 	.content {
 		@include flex-box();
 		padding: 0 30rpx;
@@ -83,6 +120,11 @@
 				}
 			}
 		}
+	}
+	.safe-area-bottom {
+		width: 100%;
+		height: env(safe-area-inset-bottom);
+		background: #fff;
 	}
 }
 </style>
