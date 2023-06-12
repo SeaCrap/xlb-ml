@@ -11,8 +11,13 @@
 			</view>
 			<view class="product-model">
 				<view class="nav-menu">
-					<scroll-view class="scroll-box" scroll-y="true">
-						<view class="nav-item" :class="item == 1 ? 'active' : ''" v-for="item in 50">导航{{item}}</view>
+					<scroll-view class="scroll-box" scroll-y :scroll-top="menuScrollVal">
+						<view 
+						class="nav-item" 
+						:class="index == activeIndex ? 'active' : ''" v-for="(item, index) in 20" :key="index"
+						@click="clickNav(index)">
+							导航{{item}}
+						</view>
 					</scroll-view>
 				</view>
 				<view class="products">
@@ -20,8 +25,9 @@
 						<u-icon name="search" size="22" color="#576b95"></u-icon>
 						搜索
 					</view>
-					<scroll-view class="scroll-box" scroll-y="true">
-						<view class="product-list" v-for="item in 5">
+					<scroll-view class="scroll-box" scroll-with-animation 
+					:scroll-top="proScrollVal" scroll-y>
+						<view class="product-list" v-for="item in 20">
 							<u-sticky :customNavHeight="0" zIndex="2">
 								<view class="product-title">产品列表{{item}}</view>
 							</u-sticky>
@@ -40,7 +46,41 @@
 
 <script>
 	export default {
-
+		data(){
+			return {
+				activeIndex: 0,
+				menuScrollVal:0,
+				proScrollVal: 0,
+				navHeightArr: [],
+				proHeightArr: []
+			}
+		},
+		onLoad() {
+			this.$nextTick(()=>{
+				this.getProHeightArr()
+			})	
+		},
+		methods: {
+			clickNav(index){
+				this.activeIndex = index,
+				this.menuScrollVal = this.navHeightArr[index]
+				this.proScrollVal = this.proHeightArr[index]
+			},
+			// 获取滚动位置信息
+			getProHeightArr(){
+				let selectorQuery = uni.createSelectorQuery()
+				// 获取 nav 滚动位置信息 
+				selectorQuery.selectAll(".nav-item").boundingClientRect(rects=>{
+					this.navHeightArr = rects.map(item => item.top - 150)
+				}).exec()
+				// 获取 product 滚动位置信息
+				selectorQuery.selectAll(".product-list").boundingClientRect(rects=>{
+					this.proHeightArr = rects.map(item => item.top - 150)
+				}).exec()
+				console.log(this.navHeightArr)
+				console.log(this.proHeightArr)
+			}
+		}
 	}
 </script>
 
