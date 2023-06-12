@@ -33,7 +33,7 @@
 							</u-sticky>
 							<view class="product-content">
 								<view class="pro-item" v-for="pro in 3">
-									<product-item></product-item>
+									<product-item />
 								</view>
 							</view>
 						</view>
@@ -41,6 +41,7 @@
 				</view>
 			</view>
 		</view>
+		<cart-layout></cart-layout>
 	</view>
 </template>
 
