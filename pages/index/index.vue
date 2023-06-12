@@ -32,7 +32,7 @@
 								<view class="product-title">产品列表{{item}}</view>
 							</u-sticky>
 							<view class="product-content">
-								<view class="pro-item" v-for="pro in 3">
+								<view class="pro-item" v-for="pro in 10">
 									<product-item />
 								</view>
 							</view>
@@ -41,7 +41,7 @@
 				</view>
 			</view>
 		</view>
-		<cart-layout></cart-layout>
+		<cart-product-list />
 	</view>
 </template>
 

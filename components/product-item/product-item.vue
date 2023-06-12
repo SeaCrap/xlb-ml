@@ -11,19 +11,9 @@
 			</view>
 			<view class="discount">3折</view>
 			<view class="specification">
-				<view class="skuSelect" v-if="true">选规格</view>
+				<view class="skuSelect" v-if="false">选规格</view>
 				<view class="uiNumber" v-else>
-					<u-number-box v-model="value" min="0" max="99" @change="onChange">
-						<view slot="minus" class="minus numbtn" :class="value<=0 ? 'none' : ''">
-							  <u-icon name="minus" size="12" color="#ccc"></u-icon>
-							</view>
-							<text slot="input" class="input" :class="value<=0 ? 'none' : ''">
-								{{value}}
-							</text>
-							<view slot="plus" class="plus numbtn">
-							  <u-icon name="plus" size="12"></u-icon>
-							</view>
-					</u-number-box>	
+					<product-stepper />
 				</view>
 			</view>
 		</view>
@@ -32,17 +22,7 @@
 
 <script>
 	export default {
-		name:"product-item",
-		data() {
-			return {
-				value: 1
-			}
-		},
-		methods: {
-			onChange(e){
-				console.log(e)
-			}
-		}
+		name:"product-item"
 	}
 </script>
 

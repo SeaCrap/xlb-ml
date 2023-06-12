@@ -1,20 +1,22 @@
 <template>
 	<view>
 		<view class="card-wrapper">
-			<view class="cart-Pop-ups">
+			<view class="cart-Pop-ups" v-if="cartVisible">
 				<view class="head">
 					<view class="text">已选商品</view>
 					<view class="empty">清空</view>
 				</view>
 				<scroll-view scroll-y="true" class="body">
 					<view class="scroll-content">
-						<view class="cart-item" v-for="item in 10">123456</view>
+						<view class="cart-item" v-for="item in 10">
+							<cart-pro-item />
+						</view>
 					</view>
 				</scroll-view>
 			</view>
 			<view class="content">
 				<view class="card-pic">
-					<view class="icon" hover-class="iconhover" hover-start-time="50">
+					<view class="icon" hover-class="iconhover" hover-start-time="50" @tap="showCart">
 						<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
 						<view class="num">1</view>
 					</view>
@@ -28,17 +30,22 @@
 			<!-- ios 安全区域	 -->
 			<view class="safe-area-bottom"></view>
 		</view>
-		<u-overlay :show="true" z-index="9"></u-overlay>
+		<u-overlay v-show="cartVisible" :show="true" duration="0" z-index="9" @click="showCart"></u-overlay>
 	</view>
 </template>
 
 <script>
 	export default {
-		name:"cart-layout",
+		name:"cart-product-list",
 		data() {
 			return {
-				
-			};
+				cartVisible: false
+			}
+		},
+		methods: {
+			showCart(){
+				this.cartVisible = !this.cartVisible
+			}
 		}
 	}
 </script>
@@ -60,7 +67,7 @@
 			>.empty {color: $brand-theme-color-aux;}
 		}
 		.body {
-			
+			height: 600rpx;
 			.scroll-content {
 				.cart-item {}
 			}
