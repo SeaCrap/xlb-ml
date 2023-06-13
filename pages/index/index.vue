@@ -102,15 +102,15 @@
 		.content {
 			flex: 1;
 			background: #fff;
-			border-radius: 20rpx 20rpx 0 0;
-			margin-top: -20rpx;
+			border-radius: 10px 10px 0 0;
+			margin-top: -10px;
 			position: relative;
 			z-index: 2;
 			overflow: hidden;
 
 			.info-model {
 				@include flex-box() color: $text-font-color-1;
-				height: 100rpx;
+				height: 50px;
 				background: #fff;
 				padding: 0 30rpx;
 				border-bottom: 1rpx solid $border-color;

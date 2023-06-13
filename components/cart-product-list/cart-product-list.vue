@@ -30,7 +30,7 @@
 			<!-- ios 安全区域	 -->
 			<view class="safe-area-bottom"></view>
 		</view>
-		<u-overlay v-show="cartVisible" :show="true" duration="0" z-index="9" @click="showCart"></u-overlay>
+		<u-overlay v-if="cartVisible" :show="true" duration="0" z-index="9" @click="showCart"></u-overlay>
 	</view>
 </template>
 
