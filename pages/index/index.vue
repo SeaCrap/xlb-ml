@@ -1,6 +1,6 @@
 <template>
 	<view class="wrapper">
-		<custom-hearder />
+		<custom-hearder id="customHeaderBar"/>
 		<view class="content">
 			<view class="info-model">
 				<view class="delivery">免费配送</view>
@@ -32,7 +32,7 @@
 								<view class="product-title">产品列表{{item}}</view>
 							</u-sticky>
 							<view class="product-content">
-								<view class="pro-item" v-for="pro in 10">
+								<view class="pro-item" v-for="pro in 2">
 									<product-item />
 								</view>
 							</view>
@@ -74,17 +74,22 @@
 			// 获取滚动位置信息
 			getHeightArr(){
 				let selectorQuery = uni.createSelectorQuery()
+				let customHeightBar
+				// 获取自定义导航栏的高度
+				selectorQuery.select("#customHeaderBar").boundingClientRect(rect=>{
+					customHeightBar = rect.height
+				}).exec()
 				// 获取 nav 滚动位置信息 
 				selectorQuery.selectAll(".nav-item").boundingClientRect(rects=>{
-					this.navHeightArr = rects.map(item => item.top - 200)
+					this.navHeightArr = rects.map(item => item.top - customHeightBar -40)
 				}).exec()
 				// 获取 product 滚动位置信息
 				selectorQuery.selectAll(".product-list").boundingClientRect(rects=>{
-					this.proHeightArr = rects.map(item => item.top - 200)
+					this.proHeightArr = rects.map(item => item.top - customHeightBar -40)
 				}).exec()
 			},
 			proScrollEnt(e){
-				let scrollTop = e.detail.scrollTop
+				let scrollTop = Math.ceil(e.detail.scrollTop)
 				let idx = this.proHeightArr.findIndex((value,index,arr)=> scrollTop>=value && scrollTop<arr[index+1])
 				this.activeIndex = idx
 				this.menuScrollVal = this.navHeightArr[idx]
