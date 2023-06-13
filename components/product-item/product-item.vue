@@ -1,19 +1,19 @@
 <template>
 	<view class="product-item">
 		<view class="product-pic">
-			<image class="proimg" src="../../static/logo.png" mode="aspectFill"></image>
+			<image class="proimg" :src="pro.thumb" mode="aspectFill"></image>
 		</view>
 		<view class="product-info">
-			<view class="product-title">商品标题商品标题商品标题商品标题商品标题</view>
+			<view class="product-title">{{pro.name}}</view>
 			<view class="product-price">
-				<view class="discount-price">￥10.5</view>
-				<view class="original-price">￥22.3</view>
+				<view class="discount-price">￥{{pro.price}}</view>
+				<view class="original-price">￥{{pro.before_price}}</view>
 			</view>
 			<view class="discount">3折</view>
 			<view class="specification">
 				<view class="skuSelect" v-if="false">选规格</view>
 				<view class="uiNumber" v-else>
-					<product-stepper />
+					<product-stepper :item="pro"/>
 				</view>
 			</view>
 		</view>
@@ -22,7 +22,13 @@
 
 <script>
 	export default {
-		name:"product-item"
+		name:"product-item",
+		props: {
+			pro: {
+				type: Object,
+				default: () => {}
+			}
+		}
 	}
 </script>
 

@@ -1,22 +1,23 @@
 <template>
 	<view class="wrapper">
-		<custom-hearder id="customHeaderBar"/>
+		<custom-hearder id="customHeaderBar" />
 		<view class="content">
 			<view class="info-model">
 				<view class="delivery">免费配送</view>
-				<view class="my-order">
+				<navigator url="/pages/order/order" class="my-order">
 					<u-icon name="calendar" color="#576b95" size="23"></u-icon>
 					我的订单
-				</view>
+				</navigator>
 			</view>
 			<view class="product-model">
 				<view class="nav-menu">
-					<scroll-view class="scroll-box" scroll-y :scroll-top="menuScrollVal">
+					<scroll-view 
+						class="scroll-box" scroll-y :scroll-top="menuScrollVal">
 						<view 
-						class="nav-item" 
-						:class="index == activeIndex ? 'active' : ''" v-for="(item, index) in 20" :key="index"
-						@click="clickNav(index)">
-							导航{{item}}
+							class="nav-item" :class="index == activeIndex ? 'active' : ''" 
+							v-for="(item, index) in dataList" :key="item.id" 
+							@click="clickNav(index)">
+							{{item.name}}
 						</view>
 					</scroll-view>
 				</view>
@@ -25,15 +26,16 @@
 						<u-icon name="search" size="22" color="#576b95"></u-icon>
 						搜索
 					</view>
-					<scroll-view class="scroll-box" scroll-with-animation @scroll="proScrollEnt"
-					:scroll-top="proScrollVal" scroll-y>
-						<view class="product-list" v-for="item in 20">
+					<scroll-view 
+						class="scroll-box" scroll-with-animation 
+						@scroll="proScrollEnt" :scroll-top="proScrollVal" scroll-y>
+						<view class="product-list" v-for="item in dataList" :key="item.id">
 							<u-sticky :customNavHeight="0" zIndex="2">
-								<view class="product-title">产品列表{{item}}</view>
+								<view class="product-title">{{item.name}}</view>
 							</u-sticky>
 							<view class="product-content">
-								<view class="pro-item" v-for="pro in 2">
-									<product-item />
+								<view class="pro-item" v-for="pro in item.children" :key="pro.id">
+									<product-item :pro="pro"/>
 								</view>
 							</view>
 						</view>
@@ -41,63 +43,143 @@
 				</view>
 			</view>
 		</view>
-		<cart-product-list />
+		<product-car-list v-if="buyNum > 0" />
 	</view>
 </template>
 
 <script>
-	import {mapState, mapMutations, mapGetters} from 'vuex'
+	import {
+		mapState,
+		mapMutations,
+		mapGetters
+	} from 'vuex'
 	export default {
-		data(){
+		data() {
 			return {
 				activeIndex: 0,
-				menuScrollVal:0,
+				menuScrollVal: 0,
 				proScrollVal: 0,
 				navHeightArr: [],
-				proHeightArr: []
+				proHeightArr: [],
+				dataList: [
+					{
+						id: 1,
+						name: "豆干制品",
+						children: [
+							{
+								id: 11,
+								name: "卫龙辣条",
+								price: 10,
+								before_price: 22,
+								thumb: "https://mp-c422c6b7-799d-4ff5-9531-5051a0481131.cdn.bspapp.com/cloudstorage/83562e26-cfac-4cec-8f51-9ae6986942af.jpg",
+								numvalue: 0
+							}, 
+							{
+								id: 12,
+								name: "卫龙大面筋",
+								price: 5,
+								before_price: 12,
+								thumb: "https://mp-c422c6b7-799d-4ff5-9531-5051a0481131.cdn.bspapp.com/cloudstorage/30569d48-bb94-40de-8d2b-a3be99d710cd.jpg",
+								numvalue: 0
+					}]
+					}, 
+					{
+						id: 2,
+						name: "饼干糕点",
+						children: [
+							{
+								id: 21,
+								name: "丹麦曲奇",
+								price: 25,
+								before_price: 36,
+								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/6758e11c-949b-48c5-ae69-ddad030c2f94.png",
+								numvalue: 0
+							}
+						]
+					}, 
+					{
+						id: 3,
+						name: "酒水饮料",
+						children: [
+							{
+								id: 31,
+								name: "韩国烧酒",
+								price: 18,
+								before_price: 29,
+								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
+								numvalue: 0
+							},
+							{
+								id: 32,
+								name: "韩国烧酒111",
+								price: 18,
+								before_price: 29,
+								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
+								numvalue: 0
+							},
+							{
+								id: 33,
+								name: "韩国烧酒222",
+								price: 18,
+								before_price: 29,
+								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
+								numvalue: 0
+							},
+						]
+					},
+				]
 			}
 		},
 		onLoad() {
-			this.$nextTick(()=>{
+			this.$nextTick(() => {
 				this.getHeightArr()
-			})	
+			})
+		},
+		computed: {
+			...mapGetters(["buyNum"])
 		},
 		methods: {
 			...mapMutations(["setFoldState"]),
-			clickNav(index){
-				if(this.activeIndex === index) return
+			clickNav(index) {
+				if (this.activeIndex === index) return
 				this.activeIndex = index
-				if(this.timeout){clearTimeout(this.timeout)}
+				if (this.timeout) {
+					clearTimeout(this.timeout)
+				}
 				this.timeout = setTimeout(() => {
 					this.menuScrollVal = this.navHeightArr[index]
 					this.proScrollVal = this.proHeightArr[index]
 				}, 100)
 			},
 			// 获取滚动位置信息
-			getHeightArr(){
+			getHeightArr() {
 				let selectorQuery = uni.createSelectorQuery()
 				let customHeightBar
 				// 获取自定义导航栏的高度
-				selectorQuery.select("#customHeaderBar").boundingClientRect(rect=>{
+				selectorQuery.select("#customHeaderBar").boundingClientRect(rect => {
 					customHeightBar = rect.height
 				}).exec()
 				// 获取 nav 滚动位置信息 
-				selectorQuery.selectAll(".nav-item").boundingClientRect(rects=>{
-					this.navHeightArr = rects.map(item => item.top - customHeightBar -40)
+				selectorQuery.selectAll(".nav-item").boundingClientRect(rects => {
+					this.navHeightArr = rects.map(item => item.top - customHeightBar - 40)
 				}).exec()
 				// 获取 product 滚动位置信息
-				selectorQuery.selectAll(".product-list").boundingClientRect(rects=>{
-					this.proHeightArr = rects.map(item => item.top - customHeightBar -40)
+				selectorQuery.selectAll(".product-list").boundingClientRect(rects => {
+					this.proHeightArr = rects.map(item => item.top - customHeightBar - 40)
 				}).exec()
 			},
-			proScrollEnt(e){
+			proScrollEnt(e) {
 				let scrollTop = Math.ceil(e.detail.scrollTop)
-				let idx = this.proHeightArr.findIndex((value,index,arr) => 
+				let idx = this.proHeightArr.findIndex((value, index, arr) =>
 					scrollTop >= value && scrollTop < arr[index + 1])
 				this.activeIndex = idx
 				this.menuScrollVal = this.navHeightArr[idx]
-				if(scrollTop < 300){this.setFoldState(false)}
-				if(scrollTop > 400){this.setFoldState(true)}
+				if (scrollTop < 300) {
+					this.setFoldState(false)
+				}
+				if (scrollTop > 400) {
+					this.setFoldState(true)
+				}
 			}
 		}
 	}
@@ -144,6 +226,7 @@
 					border-right: 1rpx solid $border-color;
 					background: $page-bg-color;
 					flex-shrink: 0;
+
 					.scroll-box {
 						height: 100%;
 
@@ -177,7 +260,7 @@
 					flex: 1;
 					height: 100%;
 					position: relative;
-					
+
 					.search-bar {
 						position: absolute;
 						top: 0;
@@ -187,23 +270,21 @@
 						height: 100rpx;
 						color: $brand-theme-color-aux;
 					}
-					
+
 					.scroll-box {
 						height: 100%;
 
 						.product-list {
 							padding: 0 30rpx;
-							
+
 							.product-title {
 								line-height: 100rpx;
 								font-size: 30rpx;
-								background: #fff;								
+								background: #fff;
 							}
 
 							.product-content {
-								.pro-item {
-									
-								}
+								.pro-item {}
 							}
 						}
 					}

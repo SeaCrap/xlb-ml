@@ -11,6 +11,17 @@ const getters = {
 		}
 		return state.system.statusBarHeight + state.system.titleBarHeight + 100 + 10
 	},
-	foldState: state => state.system.isFold
+	foldState: state => state.system.isFold,
+	proCarList: state => state.cars.proCarList,
+	totalPrice: state => {
+		return state.cars.proCarList.reduce((prev,next) => {
+			return prev += next.price
+		},0)
+	},
+	buyNum: state => {
+		return state.cars.proCarList.reduce((prev,next) => {
+			return prev += next.numvalue
+		},0)
+	}
 }
 export default getters

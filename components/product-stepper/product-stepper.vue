@@ -1,11 +1,11 @@
 <template>
 	<view class="product-stepper">
-		<u-number-box v-model="value" min="0" max="99" @change="onChange">
-			<view slot="minus" class="minus numbtn" :class="value<=0 ? 'none' : ''">
+		<u-number-box v-model="item.numvalue" min="0" max="99" @change="updateNumvalue">
+			<view slot="minus" class="minus numbtn" :class="item.numvalue <=0 ? 'none' : ''">
 				  <u-icon name="minus" size="12" color="#ccc"></u-icon>
 				</view>
-				<text slot="input" class="input" :class="value<=0 ? 'none' : ''">
-					{{value}}
+				<text slot="input" class="input" :class="item.numvalue <=0 ? 'none' : ''">
+					{{item.numvalue}}
 				</text>
 				<view slot="plus" class="plus numbtn">
 				  <u-icon name="plus" size="12" color="#fff"></u-icon>
@@ -15,16 +15,19 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	export default {
 		name:"product-stepper",
-		data() {
-			return {
-				value: 1
-			}
+		props: {
+			item: {
+				type: Object,
+				default: () => {}
+			} 
 		},
 		methods: {
-			onChange(e){
-				console.log(e)
+			...mapMutations(["setProCarList"]),
+			updateNumvalue(e){
+				this.setProCarList({pro:this.item, num: e.value})
 			}
 		}
 	}

@@ -52,7 +52,6 @@
 	.custom-header {
 		overflow: hidden;
 		background: #eecccf;
-		height: 500rpx;
 		position: relative;
 		.shop-bimage {
 			width: 100%;

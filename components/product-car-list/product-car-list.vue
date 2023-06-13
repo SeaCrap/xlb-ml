@@ -1,5 +1,6 @@
 <template>
 	<view>
+		totalPrice
 		<view class="card-wrapper">
 			<view class="cart-Pop-ups" v-if="cartVisible">
 				<view class="head">
@@ -8,8 +9,8 @@
 				</view>
 				<scroll-view scroll-y="true" class="body">
 					<view class="scroll-content">
-						<view class="cart-item" v-for="item in 10">
-							<cart-pro-item />
+						<view class="cart-item" v-for="item in proCarList" :key="item.id">
+							<product-cart-item :item="item"/>
 						</view>
 					</view>
 				</scroll-view>
@@ -18,9 +19,9 @@
 				<view class="card-pic">
 					<view class="icon" hover-class="iconhover" hover-start-time="50" @tap="showCart">
 						<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
-						<view class="num">1</view>
+						<view class="num">{{buyNum}}</view>
 					</view>
-					<view class="price">合计<text class="amount">￥10.90</text></view>
+					<view class="price">合计<text class="amount">￥{{totalPrice}}</text></view>
 				</view>
 				<view class="submit-button">
 					<view class="btn disabled" v-if="true">选好了</view>
@@ -35,17 +36,28 @@
 </template>
 
 <script>
+	import {mapGetters, mapMutations} from 'vuex'
 	export default {
-		name:"cart-product-list",
+		name:"product-car-list",
+		props: {
+			pro: {
+				type: Object,
+				default: () => {}
+			}
+		},
 		data() {
 			return {
 				cartVisible: false
 			}
 		},
+		computed: {
+			...mapGetters(["proCarList", "totalPrice", "buyNum"])
+		},
 		methods: {
 			showCart(){
 				this.cartVisible = !this.cartVisible
-			}
+			},
+			...mapMutations(["setProCarList"])
 		}
 	}
 </script>

@@ -1,18 +1,18 @@
 <template>
 	<view class="cart-pro-item">
 		<view class="product-pic">
-			<image class="proimg" src="../../static/images/bg.jpg" mode="aspectFill"></image>
+			<image class="proimg" :src="item.thumb" mode="aspectFill"></image>
 		</view>
 		<view class="product-info">
-			<view class="product-title">卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋卫龙小面筋</view>
-			<view class="product-sku">微辣/10包</view>
+			<view class="product-title">{{item.name}}</view>
+			<view class="product-sku" v-if="false">微辣/10包</view>
 			<view class="product-price">
-				<view class="discount-price">￥10.5</view>
-				<view class="original-price">￥22.3</view>
+				<view class="discount-price">￥{{item.price}}</view>
+				<view class="original-price">￥{{item.before_price}}</view>
 			</view>
 			<view class="specification">
 				<view class="uiNumber">
-					<product-stepper />
+					<product-stepper :item="item"/>
 				</view>
 			</view>
 		</view>
@@ -20,8 +20,15 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	export default {
-		name:"product-item"
+		name:"product-cart-item",
+		props: {
+			item: {
+				type: Object,
+				default: () => {}
+			}
+		}
 	}
 </script>
 
