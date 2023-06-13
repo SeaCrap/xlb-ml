@@ -5,7 +5,7 @@
 		</view>
 		<view class="shop-information">
 			<view :style="{height: statusBarHeight + 'px'}"></view>
-			<view class="service" :style="{height: titleBarHeight + 'px'}" v-if="!isFold">
+			<view class="service" :style="{height: titleBarHeight + 'px'}" v-if="!foldState">
 				<view class="kefu">
 					<u-icon name="server-fill" size="22" color="#fff"></u-icon>
 				</view>
@@ -14,7 +14,7 @@
 					后台管理
 				</navigator>
 			</view>	
-			<view class="body" :class="isFold ? 'fold' : ''"
+			<view class="body" :class="foldState ? 'fold' : ''"
 			:style="{height: bodyBarHeight + 'px'}">
 				<view class="brand">
 					<view class="pic">
@@ -39,47 +39,11 @@
 </template>
 
 <script>
+	import {mapState, mapGetters} from 'vuex'
 	export default {
 		name: "custom-hearder",
-		props: {
-			isFold: {
-				type: Boolean,
-				default: false
-			}
-		},
-		data() {
-			return {
-				statusBarHeight: 0,
-				titleBarHeight: 0
-			}
-		},
 		computed: {
-			totalHeight(){
-				if(this.isFold) return this.statusBarHeight + this.titleBarHeight + 10
-				return this.statusBarHeight + this.titleBarHeight + 100 + 10
-			},
-			bodyBarHeight(){
-				if(this.isFold) return this.titleBarHeight
-				return 100
-				
-			}
-		},
-		mounted(){
-			
-			// 状态栏高度
-			let systemInfo = uni.getSystemInfoSync()
-			console.log(systemInfo.statusBarHeight)
-			this.statusBarHeight = systemInfo.statusBarHeight
-			
-			// 胶囊 + 胶囊上下边距的高度
-			// #ifdef MP-WEIXIN
-			let menuBtnInfo = uni.getMenuButtonBoundingClientRect()
-			this.titleBarHeight = menuBtnInfo.height + (menuBtnInfo.top - this.statusBarHeight) * 2
-			// #endif
-			
-			// #ifndef MP-WEIXIN
-			this.titleBarHeight = 40
-			// #endif
+			...mapGetters(["statusBarHeight","titleBarHeight","bodyBarHeight", "totalHeight", "foldState"])	
 		}
 	}
 </script>

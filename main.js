@@ -3,7 +3,10 @@ import App from './App'
 // #ifndef VUE3
 import Vue from 'vue'
 import './uni.promisify.adaptor'
-import uView from "uview-ui"
+import uView from 'uview-ui'
+import store from './store'
+
+Vue.prototype.$store = store
 Vue.use(uView)
 Vue.config.productionTip = false
 App.mpType = 'app'

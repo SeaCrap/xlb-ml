@@ -1,6 +1,6 @@
 <template>
 	<view class="wrapper">
-		<custom-hearder id="customHeaderBar" :isFold="isFold"/>
+		<custom-hearder id="customHeaderBar"/>
 		<view class="content">
 			<view class="info-model">
 				<view class="delivery">免费配送</view>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+	import {mapState, mapMutations, mapGetters} from 'vuex'
 	export default {
 		data(){
 			return {
@@ -53,8 +54,7 @@
 				menuScrollVal:0,
 				proScrollVal: 0,
 				navHeightArr: [],
-				proHeightArr: [],
-				isFold: false
+				proHeightArr: []
 			}
 		},
 		onLoad() {
@@ -63,6 +63,7 @@
 			})	
 		},
 		methods: {
+			...mapMutations(["setFoldState"]),
 			clickNav(index){
 				if(this.activeIndex === index) return
 				this.activeIndex = index
@@ -91,10 +92,12 @@
 			},
 			proScrollEnt(e){
 				let scrollTop = Math.ceil(e.detail.scrollTop)
-				let idx = this.proHeightArr.findIndex((value,index,arr)=> scrollTop>=value && scrollTop<arr[index+1])
+				let idx = this.proHeightArr.findIndex((value,index,arr) => 
+					scrollTop >= value && scrollTop < arr[index + 1])
 				this.activeIndex = idx
 				this.menuScrollVal = this.navHeightArr[idx]
-				this.isFold = scrollTop < 300 ? false : scrollTop > 400 ? true : this.isFold;
+				if(scrollTop < 300){this.setFoldState(false)}
+				if(scrollTop > 400){this.setFoldState(true)}
 			}
 		}
 	}
