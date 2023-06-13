@@ -5,7 +5,7 @@
 		</view>
 		<view class="shop-information">
 			<view :style="{height: statusBarHeight + 'px'}"></view>
-			<view class="service" :style="{height: titleBarHeight + 'px'}">
+			<view class="service" :style="{height: titleBarHeight + 'px'}" v-if="!isFold">
 				<view class="kefu">
 					<u-icon name="server-fill" size="22" color="#fff"></u-icon>
 				</view>
@@ -14,7 +14,8 @@
 					后台管理
 				</navigator>
 			</view>	
-			<view class="body">
+			<view class="body" :class="isFold ? 'fold' : ''"
+			:style="{height: bodyBarHeight + 'px'}">
 				<view class="brand">
 					<view class="pic">
 						<image class="img" src="../../static/images/bg.jpg" mode="aspectFill"></image>
@@ -22,7 +23,6 @@
 					<view class="text">
 						<view class="title">
 							<text class="font">蟹老板的店</text>
-							<u-icon name="more-circle" size="18" color="#fff"></u-icon>
 						</view>
 						<view class="des">小店物美价廉，童叟无欺，欢迎选购！小店物美价廉，童叟无欺，欢迎选购！</view>
 					</view>
@@ -41,6 +41,12 @@
 <script>
 	export default {
 		name: "custom-hearder",
+		props: {
+			isFold: {
+				type: Boolean,
+				default: false
+			}
+		},
 		data() {
 			return {
 				statusBarHeight: 0,
@@ -49,7 +55,13 @@
 		},
 		computed: {
 			totalHeight(){
+				if(this.isFold) return this.statusBarHeight + this.titleBarHeight + 10
 				return this.statusBarHeight + this.titleBarHeight + 100 + 10
+			},
+			bodyBarHeight(){
+				if(this.isFold) return this.titleBarHeight
+				return 100
+				
 			}
 		},
 		mounted(){
@@ -57,7 +69,7 @@
 			// 状态栏高度
 			let systemInfo = uni.getSystemInfoSync()
 			console.log(systemInfo.statusBarHeight)
-			this.statusBarHeight = systemInfo.statusBarHeight || 20
+			this.statusBarHeight = systemInfo.statusBarHeight
 			
 			// 胶囊 + 胶囊上下边距的高度
 			// #ifdef MP-WEIXIN
@@ -109,6 +121,7 @@
 				padding: 0 45rpx;
 				height: 100px;
 				@include flex-box();
+				transition: all 0.25s;
 				.brand {
 					width: 580rpx;
 					@include flex-box-set(start);
@@ -127,6 +140,7 @@
 						flex: 1;
 						padding: 0 30rpx;
 						color: #fff;
+						
 						>.title {
 							font-size: 34rpx;
 							font-weight: bold;
@@ -154,6 +168,15 @@
 						.img {width: 100%; height: 100%;}
 					}
 					>.pay {font-size: 22rpx; color: #fff; text-align: center;}
+				}
+				&.fold {
+					padding: 0 30rpx;
+					.brand {
+						.pic {width: 60rpx; height: 60rpx;}
+						.title {font-size: 28rpx;}
+						.des {display: none;}
+					}
+					.code {display: none;}
 				}
 			}
 		}

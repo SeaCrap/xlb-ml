@@ -1,6 +1,6 @@
 <template>
 	<view class="wrapper">
-		<custom-hearder id="customHeaderBar"/>
+		<custom-hearder id="customHeaderBar" :isFold="isFold"/>
 		<view class="content">
 			<view class="info-model">
 				<view class="delivery">免费配送</view>
@@ -53,7 +53,8 @@
 				menuScrollVal:0,
 				proScrollVal: 0,
 				navHeightArr: [],
-				proHeightArr: []
+				proHeightArr: [],
+				isFold: false
 			}
 		},
 		onLoad() {
@@ -93,6 +94,7 @@
 				let idx = this.proHeightArr.findIndex((value,index,arr)=> scrollTop>=value && scrollTop<arr[index+1])
 				this.activeIndex = idx
 				this.menuScrollVal = this.navHeightArr[idx]
+				this.isFold = scrollTop < 300 ? false : scrollTop > 400 ? true : this.isFold;
 			}
 		}
 	}
