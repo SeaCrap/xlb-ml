@@ -22,10 +22,10 @@
 					</scroll-view>
 				</view>
 				<view class="products">
-					<view class="search-bar">
+					<navigator class="search-bar" url="/pages/search/search">
 						<u-icon name="search" size="22" color="#576b95"></u-icon>
 						搜索
-					</view>
+					</navigator>
 					<scroll-view 
 						class="scroll-box" scroll-with-animation 
 						@scroll="proScrollEnt" :scroll-top="proScrollVal" scroll-y>
