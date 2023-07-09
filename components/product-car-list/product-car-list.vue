@@ -1,6 +1,5 @@
 <template>
 	<view>
-		totalPrice
 		<view class="card-wrapper">
 			<view class="cart-Pop-ups" v-if="cartVisible">
 				<view class="head">
@@ -24,7 +23,7 @@
 					<view class="price">合计<text class="amount">￥{{totalPrice}}</text></view>
 				</view>
 				<view class="submit-button">
-					<view class="btn disabled" v-if="true">选好了</view>
+					<view class="btn disabled" v-if="true" @click="goPay">选好了</view>
 					<view class="btn" v-else>支付</view>
 				</view>
 			</view>
@@ -54,6 +53,11 @@
 			...mapGetters(["proCarList", "totalPrice", "buyNum"])
 		},
 		methods: {
+			goPay(){
+				uni.navigateTo({
+					url: "/pages/paypage/paypage"
+				})
+			},
 			showCart(){
 				this.cartVisible = !this.cartVisible
 			},
