@@ -16,15 +16,15 @@
 			</view>
 			<view class="content">
 				<view class="card-pic">
-					<view class="icon" hover-class="iconhover" hover-start-time="50" @tap="showCart">
+					<view v-if="!type" class="icon" hover-class="iconhover" hover-start-time="50" @tap="showCart">
 						<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
 						<view class="num">{{buyNum}}</view>
 					</view>
 					<view class="price">合计<text class="amount">￥{{totalPrice}}</text></view>
 				</view>
 				<view class="submit-button">
-					<view class="btn disabled" v-if="true" @click="goPay">选好了</view>
-					<view class="btn" v-else>支付</view>
+					<view class="btn disabled" v-if="!type" @click="goPay">选好了</view>
+					<view v-else class="btn" @click="confirmPay">支付</view>
 				</view>
 			</view>
 			<!-- ios 安全区域	 -->
@@ -39,6 +39,7 @@
 	export default {
 		name:"product-car-list",
 		props: {
+			type: Boolean || String,
 			pro: {
 				type: Object,
 				default: () => {}
@@ -53,6 +54,9 @@
 			...mapGetters(["proCarList", "totalPrice", "buyNum"])
 		},
 		methods: {
+			confirmPay(){
+				console.log('点击了支付')
+			},
 			goPay(){
 				uni.navigateTo({
 					url: "/pages/paypage/paypage"

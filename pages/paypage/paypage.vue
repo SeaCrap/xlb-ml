@@ -18,6 +18,9 @@
 				<text class="font">{{item.name}}</text>
 			</view>
 		</view>
+		<view class="payTabbar">
+			<product-car-list :type="isPay"></product-car-list>
+		</view>
 	</view>
 </template>
 
@@ -25,6 +28,7 @@
 	export default {
 		data() {
 			return {
+				isPay: true,
 				payDefaultValue: "alipay",
 				payType: [
 					{
@@ -78,6 +82,12 @@ page {background: $page-bg-color;}
 			color: #04C15F;
 			filter: grayscale(0%);
 		}
+	}
+	.payTabbar {
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		left: 0;
 	}
 }
 </style>
