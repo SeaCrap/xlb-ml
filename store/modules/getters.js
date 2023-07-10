@@ -15,7 +15,7 @@ const getters = {
 	proCarList: state => state.cars.proCarList,
 	totalPrice: state => {
 		return state.cars.proCarList.reduce((prev,next) => {
-			return prev += next.price
+			return prev += next.price*next.numvalue
 		},0)
 	},
 	buyNum: state => {

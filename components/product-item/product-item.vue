@@ -38,8 +38,8 @@
 		@include flex-box()
 		padding: 25rpx 0;
 		.product-pic {
-			width: 180rpx;
-			height: 180rpx;
+			width: 170rpx;
+			height: 170rpx;
 			border-radius: 20rpx;
 			overflow: hidden;
 			.proimg {

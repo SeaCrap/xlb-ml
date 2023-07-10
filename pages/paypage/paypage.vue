@@ -4,20 +4,19 @@
 		<view class="goodsList">
 			<goods-list></goods-list>
 		</view>
+		
+		<!-- #ifndef MP-WEIXIN -->
 		<view class="payType">
 			<view class="box" 
 				:class="item.value == payDefaultValue ? 'active' : ''"
 				v-for="(item,index) in payType" :key="index"
 				@click="clickPay(item.value)">
-				<u-icon color="#1578FF"
-					:name="item.value == 'alipay' ? 'zhifubao' : ''" class="icon" size="26">
-				</u-icon>
-				<u-icon color="#04C15F"
-					:name="item.value == 'wxpay' ? 'weixin-fill' : ''" class="icon" size="26">
+				<u-icon class="icon" :name="item.icon" color="item.color" size="26">
 				</u-icon>
 				<text class="font">{{item.name}}</text>
 			</view>
 		</view>
+		<!-- #endif -->
 		<view class="payTabbar">
 			<product-car-list :type="isPay"></product-car-list>
 		</view>
@@ -29,15 +28,24 @@
 		data() {
 			return {
 				isPay: true,
+				// #ifdef APP-PLUS || H5
 				payDefaultValue: "alipay",
+				// #endif
+					// #ifdef MP-WEIXIN
+					payDefaultValue: "wxpay",
+					// #endif
 				payType: [
 					{
 						name: "支付宝",
-						value: "alipay"
+						value: "alipay",
+						color: "#1578FF",
+						icon: "zhifubao"
 					},
 					{
 						name: "微信",
-						value: "wxpay"
+						value: "wxpay",
+						color: "#04C15F",
+						icon: "weixin-fill"
 					}
 				]
 			};
