@@ -16,54 +16,83 @@
 			"navigationBarBackgroundColor": "#fff"
 		}
 
-	}    ,{
-            "path" : "pages/order/detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "订单详情",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/search/search",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "搜索",
-                "enablePullDownRefresh": false,
-								"navigationBarBackgroundColor": "#fff"
-            }
-            
-        }
-        ,{
-            "path" : "pages/paypage/paypage",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "确认订单",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/address/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的地址",
-                "enablePullDownRefresh": false,
-								"navigationBarBackgroundColor": "#fff"
-            }
-            
-        }
-        ,{
-            "path" : "pages/address/edit",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "添加地址",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	}, {
+		"path": "pages/order/detail",
+		"style": {
+			"navigationBarTitleText": "订单详情",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/search/search",
+		"style": {
+			"navigationBarTitleText": "搜索",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#fff"
+		}
+
+	}, {
+		"path": "pages/paypage/paypage",
+		"style": {
+			"navigationBarTitleText": "确认订单",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/address/list",
+		"style": {
+			"navigationBarTitleText": "我的地址",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#fff"
+		}
+
+	}, {
+		"path": "pages/address/edit",
+		"style": {
+			"navigationBarTitleText": "添加地址",
+			"enablePullDownRefresh": false
+		}
+
+	}],
+	"subPackages": [{
+		"root": "pages_manage",
+		"pages": [{
+			"path": "index/index",
+			"style": {
+				"navigationBarTitleText": "后台管理首页"
+			}
+		}, {
+			"path": "category/category",
+			"style": {
+				"navigationBarTitleText": "分类页面",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "goods/list",
+			"style": {
+				"navigationBarTitleText": "商品列表",
+				"enablePullDownRefresh": false
+			}
+
+		},{
+			"path": "goods/add",
+			"style": {
+				"navigationBarTitleText": "新增商品",
+				"enablePullDownRefresh": false
+			}
+
+		}    ,{
+                    "path" : "brand/brand",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "商家信息",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
