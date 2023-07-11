@@ -6,12 +6,12 @@
 				<text class="text">新增分类</text>
 			</view>
 		</view>
-		<view class="row" v-for="(item,index) in categoryList" :key="_id">
+		<view class="row" v-for="(item,index) in categoryList" :key="item._id">
 			<view class="left">
 				<view class="name">{{item.name}}</view>
 			</view>
 			<view class="right">
-				<u-icon name="edit-pen" size="26" color="#576b95" @click="updateCategory(item._id, item.name)"></u-icon>
+				<u-icon name="edit-pen" size="26" color="#576b95" @click="updateCategory(item.name)"></u-icon>
 				<u-icon name="trash" size="26" color="#EC544F" @click="deletCategory(item._id, index)"></u-icon>
 			</view>
 		</view>
@@ -50,7 +50,7 @@
 			};
 		},
 		methods: {
-			updateCategory(id,name){
+			updateCategory(name){
 				this.inputValue = name
 				this.$refs.inputDialog.open()
 			},
