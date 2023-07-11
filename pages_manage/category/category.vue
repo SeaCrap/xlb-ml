@@ -1,6 +1,6 @@
 <template>
 	<view class="category">
-		<view class="row add" @click="addCategory">
+		<view class="row add" @click="showDialog">
 			<view class="left">
 				<u-icon name="plus" color="#576b95" size="22"></u-icon>
 				<text class="text">新增分类</text>
@@ -11,8 +11,8 @@
 				<view class="name">{{item.name}}</view>
 			</view>
 			<view class="right">
-				<u-icon name="edit-pen" size="26" color="#576b95" @click="updateCategory(item.name)"></u-icon>
-				<u-icon name="trash" size="26" color="#EC544F" @click="deletCategory(item._id, index)"></u-icon>
+				<u-icon name="edit-pen" size="26" color="#576b95" @click="updateCategory(item._id,item.name)"></u-icon>
+				<u-icon name="trash" size="26" color="#EC544F" @click="deletCategory(item._id)"></u-icon>
 			</view>
 		</view>
 		<uni-popup ref="inputDialog">
@@ -25,41 +25,56 @@
 </template>
 
 <script>
+	const db = uniCloud.database()
 	export default {
 		data() {
 			return {
 				inputValue: "",
-				categoryList: [
-					{
-						_id: 1,
-						name: "干果"
-					},
-					{
-						_id: 2,
-						name: "软糖"
-					},
-					{
-						_id: 3,
-						name: "饮料"
-					},
-					{
-						_id: 4,
-						name: "水果"
-					}
-				]
+				categoryList: [],
+				updateID: null
 			};
 		},
+		onLoad() {
+			this.getCateGory()
+		},
 		methods: {
-			updateCategory(name){
+			// 获取数据库分类数据
+			getCateGory(){
+				db.collection('xlb-mall-category').get().then(res => {this.categoryList = res.result.data})
+			},
+	
+			// 添加分类 <点击打开弹出框>
+			showDialog(){
+				this.inputValue = "" 
+				this.updateID = null
+				this.$refs.inputDialog.open()
+			},
+			
+			// 点击确认检查 updateId 是否存在，存在证明是更新修改，否则是新增
+			async dialogInputConfirm(e){
+				this.inputValue = e
+				if(this.updateID){
+					await db.collection('xlb-mall-category').doc(this.updateID).update({name: this.inputValue})
+				}else {
+					await db.collection('xlb-mall-category').add({name: this.inputValue})
+				}	
+				this.getCateGory()
+			},
+	
+			// 修改
+			updateCategory(id,name){
+				this.updateID = id
 				this.inputValue = name
 				this.$refs.inputDialog.open()
 			},
-			deletCategory(id, index){
+				
+			// 删除某个分类
+			deletCategory(id){
 				uni.showModal({
 					content: "是否删除该分类?",
 					success: res => {
 						if(res.confirm){
-							this.categoryList.splice(index, 1)
+							db.collection('xlb-mall-category').doc(id).remove().then(res => {this.getCateGory()})
 						}
 					},
 					fail: err => {
@@ -67,17 +82,6 @@
 					}
 				})
 			},
-			showDialog(){
-				this.$refs.inputDialog.open()
-			},
-			dialogInputConfirm(e){
-				this.inputValue = e
-				this.categoryList.push({
-					name: this.inputValue,
-					_id: Date.now()
-				})
-				this.inputValue = ""
-			}
 		}
 	}
 </script>
