@@ -37,6 +37,7 @@
 </template>
 
 <script>
+	const brandCloudObj = uniCloud.importObject("xlb-mall-brand")
 	export default {
 		data() {
 			return {
@@ -78,7 +79,19 @@
 				}
 			}
 		},
+		onLoad() {
+			this.getBrand()
+		},
 		methods: {
+			
+			// 获取商家信息
+			getBrand(){
+				brandCloudObj.get().then(res => {
+					this.brandFromData = res.data[0]
+				})
+			},
+			
+			// 提交
 			onSubmit(){
 				this.$refs.brandRef.validate().then(res => {
 					let filterImages = this.brandFromData.thumb.map(item => {
@@ -93,8 +106,30 @@
 					this.addAndUpdate()
 				}).catch(err => {console.log(err)})
 			},
+			
+			// 新增 or 修改品牌信息
 			addAndUpdate(){
-				console.log(this.brandFromData)
+				// 如果 _id 存在，就是修改更新
+				if(this.brandFromData._id){
+					brandCloudObj.update(this.brandFromData).then(res => {
+						uni.showToast({
+							title: "修改成功",
+							mask: true
+						})
+						setTimeout(() => {
+							uni.navigateBack()
+						},1500)
+					})
+				}else {
+					brandCloudObj.add(this.brandFromData).then(res => {
+						uni.showToast({
+							title: "添加成功"
+						})
+						setTimeout(() => {
+							uni.navigateBack()
+						},1500)
+					})
+				}
 			}
 		}
 	}
