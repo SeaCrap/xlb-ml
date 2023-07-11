@@ -7,7 +7,7 @@
 			:label-width="100"
 			label-align="right">
 			
-			<uni-forms-item label="品牌 Logo">
+			<uni-forms-item label="品牌 Logo" name="thumb" required>
 				<uni-file-picker 
 					v-model="brandFromData.thumb" 
 					fileMediatype="image" 
@@ -49,6 +49,14 @@
 					about: ""
 				},
 				brandRules: {
+					thumb: {
+						rules: [
+							{
+								required: true,
+								errorMessage: "请添加品牌 Logo"
+							},
+						]	
+					},
 					name: {
 						rules: [
 							{
