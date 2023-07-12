@@ -103,6 +103,7 @@
 	// const skuCloudObj = uniCloud.importObject("xlb-mall-sku", {"customUI":true})
 	const skuCloudObj = uniCloud.importObject("xlb-mall-sku")
 	const goodsCloudObj = uniCloud.importObject("xlb-mall-goods",  {"customUI":true})
+	let goodsID
 	export default {
 		data() {
 			return {
@@ -164,7 +165,18 @@
 				}else {return "点击选择属性"}
 			}
 		},
+		onLoad(e) {
+			goodsID = e?.id ?? null // 编辑才有 e、新增没有 e
+			if(goodsID) this.getOneProduct()
+			this.getSkuList()
+		},
 		methods: {
+			// 获取某个商品
+			async getOneProduct(){
+				let res = await goodsCloudObj.getOne(goodsID)
+				this.goodsFormData = res.data[0]
+			},
+			
 			// 过滤：获取属性值的 name
 			getAttrValName(attrVal){
 				let attrValArr = attrVal.map(item => {
@@ -249,13 +261,26 @@
 			// 选择商品属性打开 pop
 			selectedProduct(){
 				this.$refs.prodInfoModal.open()
-				if(this.attributes.length) return
-				this.getSkuList()
+				// 编辑商品，点击选择属性后改变已选属性和属性值选中状态为选中
+				this.arrSetCheck(this.attributes,this.goodsFormData.sku_select,"_id")
+			},
+			// 对比 _id，确认属性
+			// 递归调用 对比属性值的 name，确认属性值
+			arrSetCheck(arr1,arr2,key){
+				if(arr1 && arr2) {
+					arr1.forEach(item => {
+						arr2.forEach(row => {
+							if(item[key] == row[key]){
+								item.isChecked = true
+								if(item?.children?.length) this.arrSetCheck(item.children,row.children,"name")
+							}
+						})
+					})
+				}
 			},
 			
 			// 提交表单
 			onSubmit(){
-				console.log(this.goodsFormData)
 				this.$refs.goodsRef.validate().then(res => {
 					this.toDataBase()
 				}).catch(err => {console.log(err)})
@@ -271,9 +296,16 @@
 						extname: item.extname
 					}
 				})
-				let res = await goodsCloudObj.add(this.goodsFormData)
+				let toastTit
+				if(goodsID){
+					toastTit = "修改成功"
+					await goodsCloudObj.update(this.goodsFormData)
+				}else {
+					toastTit = "添加成功"
+					await goodsCloudObj.add(this.goodsFormData)
+				}
 				uni.showToast({
-					title: "添加成功"
+					title: toastTit
 				})
 				setTimeout(() => {
 					uni.navigateBack()
