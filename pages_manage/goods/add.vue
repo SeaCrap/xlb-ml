@@ -35,7 +35,13 @@
 			</uni-forms-item>
 			
 			<uni-forms-item label="商品属性">
-				<u-cell title="点击添加商品属性" isLink :border="false" @click="selectedProduct"></u-cell>
+				<u-cell :title="skuTitle" isLink :border="false" @click="selectedProduct"></u-cell>
+				<view class="skuList">
+					<view class="item" v-for="item in goodsFormData.sku_select" :key="item._id"  @click="selectedProduct">
+						<view class="attributes">{{item.skuName}}:</view>
+						<view class="attributeValue">{{getAttrValName(item.children)}}</view>
+					</view>
+				</view>
 			</uni-forms-item>
 						
 			<uni-forms-item label="商品描述">
@@ -56,7 +62,7 @@
 				</view>
 				
 				<view class="body">
-					<view class="item" v-for="(item,index) in skuArr" :key="item._id">
+					<view class="item" v-for="(item,index) in attributes" :key="item._id">
 						<view class="top">
 							<checkbox :checked="item.isChecked" @click="selectProperties(index)"></checkbox>
 							<view class="font">{{item.skuName}}</view>
@@ -75,7 +81,7 @@
 				</view>
 				
 				<view class="footer">
-					<button type="primary" @click="confirmSelection">确认选择</button>
+					<button type="primary" @click="confirmSelect">确认选择</button>
 				</view>
 			</view>
 			<view class="safe-area-bottom"></view>
@@ -94,7 +100,8 @@
 
 <script>
 	// customUI 数据库的数据加载 UI 关闭
-	const skuCloudObj = uniCloud.importObject("xlb-mall-sku", {"customUI":true})
+	// const skuCloudObj = uniCloud.importObject("xlb-mall-sku", {"customUI":true})
+	const skuCloudObj = uniCloud.importObject("xlb-mall-sku")
 	export default {
 		data() {
 			return {
@@ -142,33 +149,51 @@
 						]
 					}
 				},
-				skuArr: [],
+				attributes: [],
 				sku_select: []
 			}
 		},
-		onLoad() {
-			
+		computed: {
+			skuTitle(){
+				if(this.goodsFormData.sku_select?.length){
+					let attrArr = this.goodsFormData.sku_select.map(item => {
+						return item.skuName
+					})
+					return attrArr.join('/')
+				}else {return "点击选择属性"}
+			}
 		},
 		methods: {
+			// 过滤：获取属性值的 name
+			getAttrValName(attrVal){
+				let attrValArr = attrVal.map(item => {
+					return item.name
+				})
+				return attrValArr.join('/')
+			},
 			
 			// 确认选择
-			confirmSelection(){
+			confirmSelect(){
 				// 过滤选中的属性和属性值
-				let newSkuArr = this.skuArr.filter(item => {
-					return item.isChecked == true
+				let selectAttr = this.attributes.filter(item => {
+					// 是否选择了属性值
+					let isSelectAttrValue = item.children.some(child => child.isChecked)
+					return item.isChecked && isSelectAttrValue
 				}).map(item => {
-					let newChildSkuArr = item.children.filter(child => {
+					let selectAttrValue = item.children.filter(child => {
 						return child.isChecked
 					})
-					return {...item, children: newChildSkuArr}
+					return {...item, children: selectAttrValue}
 				})
-				this.goodsFormData.sku_select = newSkuArr
+				this.goodsFormData.sku_select = selectAttr
+				// 确认选择以后数据渲染不出来，这里强制渲染下 后续再解决
+				this.$forceUpdate() 
 				this.$refs.prodInfoModal.close()
 			},
 			// 获取 sku 属性列表
 			async getSkuList(){
 				let res = await skuCloudObj.get()
-				this.skuArr = res.data
+				this.attributes = res.data
 			},
 			
 			// 添加属性
@@ -194,34 +219,35 @@
 					}
 					let res = await skuCloudObj.add(obj)
 					obj._id = res.id
-					this.skuArr.push(obj)
+					this.attributes.push(obj)
 				}else if(this.addAttrType == "child"){ // 新增属性值
 					let obj = {
 						name: e,
 						isChecked: true
 					}
-					let id = this.skuArr[this.attrIndex]._id
+					let id = this.attributes[this.attrIndex]._id
 					let res = await skuCloudObj.addChild(id,obj)
-					this.skuArr[this.attrIndex].children.push(obj)
+					this.attributes[this.attrIndex].children.push(obj)
 				}
 				
 			},
 			
 			// 选择属性
 			selectProperties(index){
-				const atrr = this.skuArr[index]
+				const atrr = this.attributes[index]
 				atrr.isChecked = !atrr.isChecked
 			},
 			
 			// 选择属性值
 			selectSubProperties(index,cIndex){
-				const childAtrr = this.skuArr[index].children[cIndex]
-				 childAtrr.isChecked = !childAtrr.isChecked				
+				const atrrValue = this.attributes[index].children[cIndex]
+				 atrrValue.isChecked = !atrrValue.isChecked				
 			},
 			// 选择商品属性打开 pop
 			selectedProduct(){
-				this.getSkuList()
 				this.$refs.prodInfoModal.open()
+				if(this.attributes.length) return
+				this.getSkuList()
 			},
 			// 提交表单
 			onSubmit(){
@@ -237,6 +263,14 @@
 <style lang="scss">
 .goods-page {
 	padding: 30rpx;
+	.skuList {
+		.item {
+			padding: 30rpx;
+			background: $page-bg-color;
+			margin: 15rpx 0;
+			@include flex-box-set(start);
+		}
+	}
 }
 .product-attribute-wrapper {
 	padding: 30rpx;
