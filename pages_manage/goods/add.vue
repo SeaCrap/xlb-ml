@@ -102,6 +102,7 @@
 	// customUI 数据库的数据加载 UI 关闭
 	// const skuCloudObj = uniCloud.importObject("xlb-mall-sku", {"customUI":true})
 	const skuCloudObj = uniCloud.importObject("xlb-mall-sku")
+	const goodsCloudObj = uniCloud.importObject("xlb-mall-goods",  {"customUI":true})
 	export default {
 		data() {
 			return {
@@ -190,6 +191,7 @@
 				this.$forceUpdate() 
 				this.$refs.prodInfoModal.close()
 			},
+			
 			// 获取 sku 属性列表
 			async getSkuList(){
 				let res = await skuCloudObj.get()
@@ -243,18 +245,39 @@
 				const atrrValue = this.attributes[index].children[cIndex]
 				 atrrValue.isChecked = !atrrValue.isChecked				
 			},
+			
 			// 选择商品属性打开 pop
 			selectedProduct(){
 				this.$refs.prodInfoModal.open()
 				if(this.attributes.length) return
 				this.getSkuList()
 			},
+			
 			// 提交表单
 			onSubmit(){
 				console.log(this.goodsFormData)
 				this.$refs.goodsRef.validate().then(res => {
-					console.log(res)
+					this.toDataBase()
 				}).catch(err => {console.log(err)})
+			},
+		
+			// 上传云数据
+			async toDataBase(){
+				// 过滤图片数据 只要几个字段
+				this.goodsFormData.thumb = this.goodsFormData.thumb.map(item => {
+					return {
+						url: item.url,
+						name: item.name,
+						extname: item.extname
+					}
+				})
+				let res = await goodsCloudObj.add(this.goodsFormData)
+				uni.showToast({
+					title: "添加成功"
+				})
+				setTimeout(() => {
+					uni.navigateBack()
+				},1500)
 			}
 		}
 	}
