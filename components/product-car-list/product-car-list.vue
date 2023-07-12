@@ -148,10 +148,5 @@
 			}
 		}
 	}
-	.safe-area-bottom {
-		width: 100%;
-		height: env(safe-area-inset-bottom);
-		background: #fff;
-	}
 }
 </style>

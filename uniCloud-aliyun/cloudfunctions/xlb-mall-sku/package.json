@@ -1,0 +1,7 @@
+{
+  "name": "xlb-mall-sku",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}
