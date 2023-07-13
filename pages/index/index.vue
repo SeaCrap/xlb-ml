@@ -15,7 +15,7 @@
 						class="scroll-box" scroll-y :scroll-top="menuScrollVal">
 						<view 
 							class="nav-item" :class="index == activeIndex ? 'active' : ''" 
-							v-for="(item, index) in dataList" :key="item.id" 
+							v-for="(item, index) in goodsList" :key="item._id" 
 							@click="clickNav(index)">
 							{{item.name}}
 						</view>
@@ -29,12 +29,13 @@
 					<scroll-view 
 						class="scroll-box" scroll-with-animation 
 						@scroll="proScrollEnt" :scroll-top="proScrollVal" scroll-y>
-						<view class="product-list" v-for="item in dataList" :key="item.id">
+						<view class="product-list" v-for="item in goodsList" :key="item._id">
 							<u-sticky :customNavHeight="0" zIndex="2">
 								<view class="product-title">{{item.name}}</view>
 							</u-sticky>
 							<view class="product-content">
-								<view class="pro-item" v-for="pro in item.children" :key="pro.id">
+								<view class="pro-item" v-for="pro in item.proGroup
+" :key="pro._id">
 									<product-item :pro="pro"/>
 								</view>
 							</view>
@@ -53,6 +54,7 @@
 		mapMutations,
 		mapGetters
 	} from 'vuex'
+	const goodsCloudObj = uniCloud.importObject("xlb-mall-goods", {"customUI": true})
 	export default {
 		data() {
 			return {
@@ -61,76 +63,14 @@
 				proScrollVal: 0,
 				navHeightArr: [],
 				proHeightArr: [],
-				dataList: [
-					{
-						id: 1,
-						name: "豆干制品",
-						children: [
-							{
-								id: 11,
-								name: "卫龙辣条",
-								price: 10,
-								before_price: 22,
-								thumb: "https://mp-c422c6b7-799d-4ff5-9531-5051a0481131.cdn.bspapp.com/cloudstorage/83562e26-cfac-4cec-8f51-9ae6986942af.jpg",
-								numvalue: 0
-							}, 
-							{
-								id: 12,
-								name: "卫龙大面筋",
-								price: 5,
-								before_price: 12,
-								thumb: "https://mp-c422c6b7-799d-4ff5-9531-5051a0481131.cdn.bspapp.com/cloudstorage/30569d48-bb94-40de-8d2b-a3be99d710cd.jpg",
-								numvalue: 0
-					}]
-					}, 
-					{
-						id: 2,
-						name: "饼干糕点",
-						children: [
-							{
-								id: 21,
-								name: "丹麦曲奇",
-								price: 25,
-								before_price: 36,
-								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/6758e11c-949b-48c5-ae69-ddad030c2f94.png",
-								numvalue: 0
-							}
-						]
-					}, 
-					{
-						id: 3,
-						name: "酒水饮料",
-						children: [
-							{
-								id: 31,
-								name: "韩国烧酒",
-								price: 18,
-								before_price: 29,
-								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
-								numvalue: 0
-							},
-							{
-								id: 32,
-								name: "韩国烧酒111",
-								price: 18,
-								before_price: 29,
-								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
-								numvalue: 0
-							},
-							{
-								id: 33,
-								name: "韩国烧酒222",
-								price: 18,
-								before_price: 29,
-								thumb: "https://mp-3309c116-4743-47d6-9979-462d2edf878c.cdn.bspapp.com/cloudstorage/b1a12bee-0602-4cb5-927d-b2b246700e89.jpeg",
-								numvalue: 0
-							},
-						]
-					},
-				]
+				goodsList: []
 			}
 		},
-		onLoad() {
+		async onLoad() { 
+			// 同步化解决刷新导航未选中 bug
+			// getGoodsList 在这里只是一个普通函数，他不是异步同步化后的函数，所以是异步
+			// 这里两个异步任务，一般网络请求比较慢，这里同步化可以保证现有商品模块才计算模块高度
+			await this.getGoodsList(),
 			this.$nextTick(() => {
 				this.getHeightArr()
 			})
@@ -139,6 +79,18 @@
 			...mapGetters(["buyNum"])
 		},
 		methods: {
+			// // 获取商品列表
+			async getGoodsList(){
+				let res = await goodsCloudObj.getList()
+				// 云端获取的商品没有 numvalue 字段
+				// 步进器依赖这个属性，这里添加 numvalue
+				res.forEach((item,index) => {
+					item.proGroup.forEach((child,idx) => {
+						res[index].proGroup[idx].numvalue = 0 // 如果是0 显示 + 号
+					})
+				})
+				this.goodsList = res
+			},
 			...mapMutations(["setFoldState"]),
 			clickNav(index) {
 				if (this.activeIndex === index) return

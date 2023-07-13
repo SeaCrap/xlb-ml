@@ -1,17 +1,25 @@
 <template>
 	<view class="product-item">
 		<view class="product-pic">
-			<image class="proimg" :src="pro.thumb" mode="aspectFill"></image>
+			<image class="proimg" :src="pro.thumb[0].url" mode="aspectFill"></image>
 		</view>
 		<view class="product-info">
 			<view class="product-title">{{pro.name}}</view>
 			<view class="product-price">
-				<view class="discount-price">￥{{pro.price}}</view>
-				<view class="original-price">￥{{pro.before_price}}</view>
+				<view class="discount-price">￥{{priceFormat(pro.price)}}</view>
+				<view 
+					v-if="pro.before_price" 
+					class="original-price">
+					￥{{priceFormat(pro.before_price)}}
+				</view>
 			</view>
-			<view class="discount">3折</view>
+			<view 
+				v-if="pro.before_price && discount(pro.price,pro.before_price)" 
+				class="discount">
+				{{discount(pro.price,pro.before_price)}}折
+			</view>
 			<view class="specification">
-				<view class="skuSelect" v-if="false">选规格</view>
+				<view class="skuSelect" v-if="Array.isArray(pro.sku_select) && pro.sku_select.length">选规格</view>
 				<view class="uiNumber" v-else>
 					<product-stepper :item="pro"/>
 				</view>
@@ -21,6 +29,7 @@
 </template>
 
 <script>
+	import {priceFormat, discount} from "../../utils/tools.js"
 	export default {
 		name:"product-item",
 		props: {
@@ -28,6 +37,10 @@
 				type: Object,
 				default: () => {}
 			}
+		},
+		methods: {
+			priceFormat,
+			discount
 		}
 	}
 </script>
@@ -35,8 +48,8 @@
 <style lang="scss" scoped>
 	.product-item {
 		width: 100%;
-		@include flex-box()
 		padding: 25rpx 0;
+		display: flex;
 		.product-pic {
 			width: 170rpx;
 			height: 170rpx;
@@ -59,7 +72,7 @@
 			.product-price {
 				@include flex-box-set(start,end);
 				font-weight: bold;
-				padding: 25rpx 0;
+				padding: 20rpx 0;
 				.discount-price {
 					font-size: 34rpx;
 					color: $brand-theme-color;
