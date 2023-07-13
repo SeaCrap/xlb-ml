@@ -17,7 +17,7 @@
 				</view>	
 				<view class="body" :class="foldState ? 'fold' : ''"
 				:style="{height: bodyBarHeight + 'px'}">
-					<view class="brand">
+					<view class="brand" @click="showBrandPop">
 						<view class="pic">
 							<image class="img" :src="brandInfo.thumb[0].url" mode="aspectFill"></image>
 						</view>
@@ -37,6 +37,40 @@
 				</view>
 			</view>
 		</view>
+
+		<view v-if="brandInfo.name">
+			<uni-popup ref="brandPopRef" type="bottom">
+				<view class="brand-popup-wrapper">
+					<view class="close" @click="closeBrandPop">
+						<u-icon name="arrow-down" color="#666"></u-icon>
+					</view>
+					
+					<view class="brand">
+						<view class="pic">
+							<image class="img" :src="brandInfo.thumb[0].url" mode="aspectFill"></image>
+						</view>
+						<view class="title">{{brandInfo.name}}</view>
+						<view class="des">{{brandInfo.about}}</view>
+					</view>
+					
+					<view class="cell">
+						<u-cell-group>
+							<u-cell 
+								icon="phone" 
+								:title="brandInfo.mobile" isLink @click="callPhone(brandInfo.mobile)">
+							</u-cell>
+							<u-cell 
+								icon="map" 
+								:title="brandInfo.address" isLink @click="viewAddress(brandInfo.address)">
+							</u-cell>
+						</u-cell-group>
+					</view>
+				</view>
+				
+				<view class="safe-area-bottom"></view>
+			</uni-popup>
+		</view>
+		
 	</view>
 </template>
 
@@ -58,7 +92,43 @@
 			this.getBrandInfo()
 		},
 		methods: {
-			...mapActions(["getBrandInfo"])
+			// 获取商户信息
+			...mapActions(["getBrandInfo"]),
+			// 商户信息 pop
+			showBrandPop(){
+				this.$refs.brandPopRef.open()
+			},
+			// 点击箭头关闭弹窗
+			closeBrandPop(){
+				this.$refs.brandPopRef.close()
+			},
+			
+			// 拨打商户电话
+			callPhone(mobile){
+				uni.makePhoneCall({
+					phoneNumber: mobile
+				})
+			},
+			// 查看商铺地址
+			viewAddress(address){
+				// 请求高德地图接口
+				uni.request({
+					url: "https://restapi.amap.com/v3/geocode/geo",
+					data: {
+						key: "d0c2a5f8fbfa0b944b1669a631d04e83",
+						address
+					},
+					success: res => {
+						// 获取经纬度
+						let location = res.data.geocodes[0].location
+						let locationArr = location.split(",").map(item => Number(item))
+						uni.openLocation({
+							latitude: locationArr[1],
+							longitude: locationArr[0]
+						})
+					}
+				})				
+			}
 		}
 	}
 </script>
@@ -158,5 +228,36 @@
 				}
 			}
 		}
+	}
+	.brand-popup-wrapper {
+		padding: 30rpx;
+		background: #fff;
+		border-radius: 20rpx 20rpx 0 0;
+		@include flex-box();
+		flex-direction: column;
+		.close {
+			background: page-bg-color;
+			padding: 5rpx 20rpx;
+			border-radius: 30rpx;
+		}
+		.brand {
+			@include flex-box();
+			flex-direction: column;
+			padding: 30rpx 0;
+			.pic {
+				width: 100rpx;
+				height: 100rpx;
+				border-radius: 50%;
+				overflow: hidden;
+				.img {width: 100%; height: 100%;}
+			}
+			.title {
+				font-size: 34rpx;
+				color: $text-font-color-1;
+				padding: 10rpx 0;
+			}
+			.des {font-size: 28rpx; color: $text-font-color-2;}
+		}
+		.cell {width: 100%; padding: 30rpx 0 100rpx;}
 	}
 </style>
