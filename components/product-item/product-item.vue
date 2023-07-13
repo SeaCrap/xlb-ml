@@ -18,8 +18,13 @@
 				class="discount">
 				{{discount(pro.price,pro.before_price)}}折
 			</view>
-			<view class="specification">
-				<view class="skuSelect" v-if="Array.isArray(pro.sku_select) && pro.sku_select.length">选规格</view>
+			<view class="specification" v-if="btnState">
+				<view 
+					class="skuSelect" 
+					v-if="Array.isArray(pro.sku_select) && pro.sku_select.length"
+					@click.stop="selectSpecs">
+					选规格
+				</view>
 				<view class="uiNumber" v-else>
 					<product-stepper :item="pro"/>
 				</view>
@@ -37,16 +42,27 @@
 			pro: {
 				type: Object,
 				default: () => {}
+			},
+			btnState: {
+				type: Boolean,
+				default: true
 			}
 		},
 		methods: {
 			priceFormat,
 			discount,
-			...mapMutations(["SET_DETAIL_START", "SET_DETAIL_DATA"]),
+			...mapMutations(["SET_DETAIL_START", "SET_DETAIL_DATA", "SET_PRO_SPECS"]),
 			// 打开详情
 			showDetail(){
+				if(!this.btnState) return
 				this.SET_DETAIL_START(true),
 				this.SET_DETAIL_DATA(this.pro)
+			},
+			// 选规格
+			selectSpecs(){
+				this.SET_PRO_SPECS(true),
+				this.SET_DETAIL_DATA(this.pro)
+				console.log(this.pro)
 			}
 		}
 	}

@@ -25,6 +25,7 @@ const getters = {
 	},
 	brandInfo: state => state.brand.brandInfo,
 	detailPopState: state => state.goods.detailPopState,
-	detailData: state => state.goods.detailData
+	detailData: state => state.goods.detailData,
+	proSpecsState: state => state.goods.proSpecsState
 }
 export default getters

@@ -71,7 +71,6 @@
 </script>
 
 <style lang="scss">
-	.pro-detail-popup {
 		.detail-wrapper {
 			height: 85vh;
 			.placeholder-box {
@@ -150,6 +149,4 @@
 				padding: 0 200rpx;
 			}
 		}
-	}
-
 </style>

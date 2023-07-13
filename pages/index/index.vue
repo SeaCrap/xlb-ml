@@ -50,6 +50,7 @@
 		<product-car-list v-if="buyNum > 0" />
 		
 		<pro-detail-popup />
+		<pro-select-specss />
 	</view>
 </template>
 
