@@ -23,6 +23,8 @@ const getters = {
 			return prev += next.numvalue
 		},0)
 	},
-	brandInfo: state => state.brand.brandInfo
+	brandInfo: state => state.brand.brandInfo,
+	detailPopState: state => state.goods.detailPopState,
+	detailData: state => state.goods.detailData
 }
 export default getters

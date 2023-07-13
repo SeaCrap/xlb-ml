@@ -14,7 +14,7 @@
 
 <style lang="scss">
 	@import "uview-ui/index.scss";
-	view,text {
+	view,text,scroll-view{
 		box-sizing: border-box;
 	}
 	.safe-area-bottom {

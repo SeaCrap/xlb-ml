@@ -34,8 +34,10 @@
 								<view class="product-title">{{item.name}}</view>
 							</u-sticky>
 							<view class="product-content">
-								<view class="pro-item" v-for="pro in item.proGroup
-" :key="pro._id">
+								<view 
+									class="pro-item" 
+									v-for="pro in item.proGroup" 
+									:key="pro._id">
 									<product-item :pro="pro"/>
 								</view>
 							</view>
@@ -44,7 +46,10 @@
 				</view>
 			</view>
 		</view>
+		
 		<product-car-list v-if="buyNum > 0" />
+		
+		<pro-detail-popup />
 	</view>
 </template>
 
@@ -142,7 +147,6 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-
 		.content {
 			flex: 1;
 			background: #fff;

@@ -1,14 +1,14 @@
 <template>
 	<view class="cart-pro-item">
 		<view class="product-pic">
-			<image class="proimg" :src="item.thumb" mode="aspectFill"></image>
+			<image class="proimg" :src="item.thumb[0].url" mode="aspectFill"></image>
 		</view>
 		<view class="product-info">
 			<view class="product-title">{{item.name}}</view>
-			<view class="product-sku" v-if="false">微辣/10包</view>
+			<view class="product-sku" v-if="false">辣条/包</view>
 			<view class="product-price">
-				<view class="discount-price">￥{{item.price}}</view>
-				<view class="original-price">￥{{item.before_price}}</view>
+				<view class="discount-price">￥{{priceFormat(item.price)}}</view>
+				<view v-if="item.before_price" class="original-price">￥{{priceFormat(item.before_price)}}</view>
 			</view>
 			<view class="specification">
 				<view class="uiNumber">
@@ -21,6 +21,7 @@
 
 <script>
 	import {mapMutations} from 'vuex'
+		import {priceFormat,discount} from '@/utils/tools.js'
 	export default {
 		name:"product-cart-item",
 		props: {
@@ -28,6 +29,10 @@
 				type: Object,
 				default: () => {}
 			}
+		},
+		methods: {
+			priceFormat,
+			discount
 		}
 	}
 </script>
@@ -35,7 +40,7 @@
 <style lang="scss" scoped>
 	.cart-pro-item {
 		width: 100%;
-		@include flex-box()
+		@include flex-box-set(start,stretch);
 		padding: 20rpx 0;
 		border-bottom: 1px solid $border-color-light;
 		.product-pic {
@@ -61,6 +66,7 @@
 			}
 			.product-price {
 				@include flex-box-set(start);
+				padding: 10rpx 0;
 				line-height: 40rpx;
 				.discount-price {
 					font-size: 28rpx;

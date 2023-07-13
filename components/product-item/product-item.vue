@@ -1,5 +1,5 @@
 <template>
-	<view class="product-item">
+	<view class="product-item" @click="showDetail">
 		<view class="product-pic">
 			<image class="proimg" :src="pro.thumb[0].url" mode="aspectFill"></image>
 		</view>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	import {priceFormat, discount} from "../../utils/tools.js"
 	export default {
 		name:"product-item",
@@ -40,7 +41,13 @@
 		},
 		methods: {
 			priceFormat,
-			discount
+			discount,
+			...mapMutations(["SET_DETAIL_START", "SET_DETAIL_DATA"]),
+			// 打开详情
+			showDetail(){
+				this.SET_DETAIL_START(true),
+				this.SET_DETAIL_DATA(this.pro)
+			}
 		}
 	}
 </script>
