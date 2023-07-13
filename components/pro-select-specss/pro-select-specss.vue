@@ -9,27 +9,33 @@
 							<product-item :pro="detailData" :btn-state="false"/>
 						</view>
 						<view class="select-specs-wrapper">
-							<view class="specs-list" v-for="item in detailData.sku_select" :key="item._id">
+							<view class="specs-list" v-for="(item,index) in detailData.sku_select" :key="item._id">
 								<view class="attr">{{item.skuName}}</view>
 								<view class="attr-value-group">
 									<view 
 										class="attr-value" 
-										v-for="(child,index) in item.children" :key="index">
+										:class="attrVal.includes(child.name) ? 'active' : ''"
+										v-for="(child,cIdx) in item.children" :key="cIdx"
+										@click="selectAttrValue(index,cIdx)">
 										{{child.name}}
 									</view>
 								</view>
 							</view>
 						</view>
+					
 						<view class="numSelect">
 							<view class="title">购买数量</view>
-							<u-number-box v-model="value">
+							<u-number-box v-model="numvalue">
 								
 							</u-number-box>
 						</view>
 					</scroll-view>
 				</view>
 				<view class="footer">
-					<u-button color="#EC544F" xiconColor="#fff">确认</u-button>
+					<u-button 
+						color="#EC544F" 
+						:disabled="confirmState"
+						@click="confirmSumit">确认</u-button>
 				</view>
 			</view>
 		</u-popup>
@@ -42,16 +48,49 @@
 		name:"pro-select-specss",
 		data() {
 			return {
-				value: 1
+				numvalue: 1,
+				selectAttrVals: []
 			}
 		},
 		computed: {
-			...mapGetters(["proSpecsState", "detailData"])
+			...mapGetters(["proSpecsState", "detailData"]),
+			// 筛选属性值
+			attrVal(){
+				return this.selectAttrVals.map(item => item.name)
+			},
+			// 未选择属性值的时候应该禁用确认按钮
+			confirmState(){
+				// let selectLength = this.selectAttrVals.length
+				// let sourceDataLength = this.detailData?.sku_select?.length
+				// return (selectLength == sourceDataLength ) ? false : true
+				return this.selectAttrVals.length != this.detailData?.sku_select?.length	
+			}
 		},
 		methods: {
+			// 属性选择确认
+			confirmSumit(){
+				this.onClose()
+			},
 			...mapMutations(["SET_PRO_SPECS"]),
 			onClose(){
 				this.SET_PRO_SPECS(false)
+				// 选择属性以后 关闭弹窗就清空选择 保证下次选择都是未选状态
+				this.selectAttrVals = []
+			},
+			// 选择属性值
+			selectAttrValue(index, cIdx){
+				let attrId = this.detailData.sku_select[index]._id
+				let attrValName = this.detailData.sku_select[index].children[cIdx].name
+				let obj = {id: attrId, name: attrValName}
+				
+				let isFindIndex = this.selectAttrVals.findIndex(item => {
+					return item.id == obj.id
+				})
+				if(isFindIndex < 0){
+					this.selectAttrVals.push(obj)
+				}else {
+					this.selectAttrVals.splice(isFindIndex,1,obj)
+				}			
 			}
 		}
 	}
