@@ -22,6 +22,7 @@ const getters = {
 		return state.cars.proCarList.reduce((prev,next) => {
 			return prev += next.numvalue
 		},0)
-	}
+	},
+	brandInfo: state => state.brand.brandInfo
 }
 export default getters

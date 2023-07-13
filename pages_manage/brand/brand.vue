@@ -38,6 +38,7 @@
 
 <script>
 	const brandCloudObj = uniCloud.importObject("xlb-mall-brand")
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -91,7 +92,8 @@
 			this.getBrand()
 		},
 		methods: {
-			
+			// vuex 修改商铺信息
+			...mapMutations(["SET_BRAND"]),
 			// 获取商家信息
 			getBrand(){
 				brandCloudObj.get().then(res => {
@@ -116,28 +118,25 @@
 			},
 			
 			// 新增 or 修改品牌信息
-			addAndUpdate(){
+			async addAndUpdate(){
+				let title
 				// 如果 _id 存在，就是修改更新
 				if(this.brandFromData._id){
-					brandCloudObj.update(this.brandFromData).then(res => {
-						uni.showToast({
-							title: "修改成功",
-							mask: true
-						})
-						setTimeout(() => {
-							uni.navigateBack()
-						},1500)
-					})
+					let res = await brandCloudObj.update(this.brandFromData)
+					title="修改成功"
 				}else {
-					brandCloudObj.add(this.brandFromData).then(res => {
-						uni.showToast({
-							title: "添加成功"
-						})
-						setTimeout(() => {
-							uni.navigateBack()
-						},1500)
-					})
+					let res = await brandCloudObj.add(this.brandFromData)
+					title="添加成功"
 				}
+				uni.showToast({
+					title: title,
+					mask: true
+				})
+				setTimeout(() => {
+					uni.navigateBack()
+				},1500)
+				// 新增 or 添加后修改 vuex 中的商户信息
+				this.SET_BRAND(this.brandFromData) 
 			}
 		}
 	}

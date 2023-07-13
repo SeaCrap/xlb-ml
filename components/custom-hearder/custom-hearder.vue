@@ -1,37 +1,39 @@
 <template>
-	<view class="custom-header" :style="{height: totalHeight + 'px'}">
-		<view class="shop-bimage">
-			<image class="bgimg" src="../../static/images/bg.jpg" mode="aspectFill"></image>
-		</view>
-		<view class="shop-information">
-			<view :style="{height: statusBarHeight + 'px'}"></view>
-			<view class="service" :style="{height: titleBarHeight + 'px'}" v-if="!foldState">
-				<view class="kefu">
-					<u-icon name="server-fill" size="22" color="#fff"></u-icon>
-				</view>
-				<navigator class="manage" url="/pages_manage/index/index">
-					<u-icon name="bag-fill" size="22" color="#fff"></u-icon>
-					后台管理
-				</navigator>
-			</view>	
-			<view class="body" :class="foldState ? 'fold' : ''"
-			:style="{height: bodyBarHeight + 'px'}">
-				<view class="brand">
-					<view class="pic">
-						<image class="img" src="../../static/images/bg.jpg" mode="aspectFill"></image>
+	<view>
+		<view v-if="brandInfo.name" class="custom-header" :style="{height: totalHeight + 'px'}">
+			<view class="shop-bimage">
+				<image class="bgimg" :src="brandInfo.thumb[0].url" mode="aspectFill"></image>
+			</view>
+			<view class="shop-information">
+				<view :style="{height: statusBarHeight + 'px'}"></view>
+				<view class="service" :style="{height: titleBarHeight + 'px'}" v-if="!foldState">
+					<view class="kefu">
+						<u-icon name="server-fill" size="22" color="#fff"></u-icon>
 					</view>
-					<view class="text">
-						<view class="title">
-							<text class="font">蟹老板的店</text>
+					<navigator class="manage" url="/pages_manage/index/index">
+						<u-icon name="bag-fill" size="22" color="#fff"></u-icon>
+						后台管理
+					</navigator>
+				</view>	
+				<view class="body" :class="foldState ? 'fold' : ''"
+				:style="{height: bodyBarHeight + 'px'}">
+					<view class="brand">
+						<view class="pic">
+							<image class="img" :src="brandInfo.thumb[0].url" mode="aspectFill"></image>
 						</view>
-						<view class="des">小店物美价廉，童叟无欺，欢迎选购！小店物美价廉，童叟无欺，欢迎选购！</view>
+						<view class="text">
+							<view class="title">
+								<text class="font">{{brandInfo.name}}</text>
+							</view>
+							<view class="des">{{brandInfo.about}}</view>
+						</view>
 					</view>
-				</view>
-				<view class="code">
-					<view class="pic">
-						<image class="img" src="../../static/logo.png" mode="scaleToFill"></image>
+					<view class="code">
+						<view class="pic">
+							<image class="img" src="../../static/logo.png" mode="scaleToFill"></image>
+						</view>
+						<text class="pay">付款</text>
 					</view>
-					<text class="pay">付款</text>
 				</view>
 			</view>
 		</view>
@@ -39,11 +41,24 @@
 </template>
 
 <script>
-	import {mapState, mapGetters} from 'vuex'
+	import {mapState, mapGetters, mapActions} from 'vuex'
 	export default {
 		name: "custom-hearder",
 		computed: {
-			...mapGetters(["statusBarHeight","titleBarHeight","bodyBarHeight", "totalHeight", "foldState"])	
+			...mapGetters([
+				"statusBarHeight",
+				"titleBarHeight",
+				"bodyBarHeight", 
+				"totalHeight", 
+				"foldState", 
+				"brandInfo"
+			])	
+		},
+		created() {
+			this.getBrandInfo()
+		},
+		methods: {
+			...mapActions(["getBrandInfo"])
 		}
 	}
 </script>
