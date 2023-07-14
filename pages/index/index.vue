@@ -60,6 +60,7 @@
 		mapMutations,
 		mapGetters
 	} from 'vuex'
+import productItemVue from '../../components/product-item/product-item.vue'
 	const goodsCloudObj = uniCloud.importObject("xlb-mall-goods", {"customUI": true})
 	export default {
 		data() {
@@ -82,20 +83,40 @@
 			})
 		},
 		computed: {
-			...mapGetters(["buyNum"])
+			...mapGetters(["buyNum", "proCarList"])
+		},
+		watch: {
+			proCarList:{
+				deep: true,
+				handler(newVal,oldVal){
+					this.setNumValue()
+				}				
+			}
 		},
 		methods: {
-			// // 获取商品列表
+			// 获取商品列表
 			async getGoodsList(){
 				let res = await goodsCloudObj.getList()
-				// 云端获取的商品没有 numvalue 字段
-				// 步进器依赖这个属性，这里添加 numvalue
-				res.forEach((item,index) => {
+				this.goodsList = res
+				this.setNumValue()
+			},
+			// 购买数量购物车和首页数据
+			setNumValue(){
+				this.goodsList.forEach((item,index) => {
 					item.proGroup.forEach((child,idx) => {
-						res[index].proGroup[idx].numvalue = 0 // 如果是0 显示 + 号
+						this.$set(this.goodsList[index].proGroup[idx], "numvalue", 0)
 					})
 				})
-				this.goodsList = res
+				// 比较购物车的商品数据和首页列表的商品数据
+				this.proCarList.forEach((item1,index1) => { // 购物车某个分类
+					this.goodsList.forEach((item2,index2) => { // 首页某个分类
+						// 判断首页分类下的商品 id 和购物车分类下商品 id
+						let index = item2.proGroup.findIndex(item3 => item3._id == item1.goodsid)
+						if(index >= 0){
+							this.$set(this.goodsList[index2].proGroup[index], "numvalue", item1.numvalue)
+						}
+					})
+				})
 			},
 			...mapMutations(["setFoldState"]),
 			clickNav(index) {

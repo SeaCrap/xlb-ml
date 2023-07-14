@@ -3,8 +3,10 @@ const cars = {
 		proCarList: []
 	},
 	mutations: {
-		SET_PRO_CART_LIST(state,params){
-			console.log(params)
+		SET_PRO_CART_LIST(state,params=null){
+			// 如果没有传递就是清空购物车
+			if(!params) return state.proCarList = []
+			
 			let {pro, num} = params
 			let caritem = {
 				goodsid: pro._id || pro.goodsid,

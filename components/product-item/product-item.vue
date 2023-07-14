@@ -62,7 +62,6 @@
 			selectSpecs(){
 				this.SET_PRO_SPECS(true),
 				this.SET_DETAIL_DATA(this.pro)
-				console.log(this.pro)
 			}
 		}
 	}

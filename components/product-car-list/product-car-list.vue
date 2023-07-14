@@ -4,7 +4,7 @@
 			<view class="cart-Pop-ups" v-if="cartVisible">
 				<view class="head">
 					<view class="text">已选商品</view>
-					<view class="empty">清空</view>
+					<view class="empty" @click="clearCart">清空</view>
 				</view>
 				<scroll-view scroll-y="true" class="body">
 					<view class="scroll-content">
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import {mapGetters,mapMutations} from 'vuex'
 	import {priceFormat} from '@/utils/tools.js'
 	export default {
 		name:"product-car-list",
@@ -56,6 +56,10 @@
 			...mapGetters(["proCarList", "totalPrice", "buyNum"])
 		},
 		methods: {
+			...mapMutations(["SET_PRO_CART_LIST"]),
+			clearCart (){
+				this.SET_PRO_CART_LIST()
+			},
 			priceFormat,
 			confirmPay(){
 				console.log('点击了支付')
