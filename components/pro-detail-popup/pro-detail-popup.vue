@@ -39,7 +39,13 @@
 					</scroll-view>
 				</view>
 				<view class="footer">
-					<u-button color="#EC544F" icon="shopping-cart" iconColor="#fff">加入购物车</u-button>
+					<u-button 
+						color="#EC544F" 
+						icon="shopping-cart" 
+						iconColor="#fff"
+						@click="addCart">
+						加入购物车
+					</u-button>
 				</view>
 			</view>
 		</u-popup>
@@ -62,9 +68,13 @@
 		methods: {
 			priceFormat,
 			discount,
-			...mapMutations(["SET_DETAIL_START"]),
+			...mapMutations(["SET_DETAIL_START","SET_PRO_SPECS"]),
 			onClose(){
 				this.SET_DETAIL_START(false)
+			},
+			// 加入购物车
+			addCart(){
+				this.SET_PRO_SPECS(true)
 			}
 		}
 	}

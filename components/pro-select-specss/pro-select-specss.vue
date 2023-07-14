@@ -1,6 +1,7 @@
 <template>
 	<view class="pro-specs">
-		<u-popup :show="proSpecsState" @close="onClose" closeable round="10">
+		<u-popup :show="proSpecsState" 
+			@close="onClose" closeable round="10" z-index="20001" :overlayStyle="{zIndex:20000}">
 			<view class="pro-specs-wrapper">
 				<view class="placeholder-box"></view>
 				<view class="container">
@@ -8,13 +9,13 @@
 						<view class="pro-item">
 							<product-item :pro="detailData" :btn-state="false"/>
 						</view>
-						<view class="select-specs-wrapper">
+						<view class="select-specs-wrapper" v-if="selectShow">
 							<view class="specs-list" v-for="(item,index) in detailData.sku_select" :key="item._id">
 								<view class="attr">{{item.skuName}}</view>
 								<view class="attr-value-group">
 									<view 
 										class="attr-value" 
-										:class="attrVal.includes(child.name) ? 'active' : ''"
+										:class="attrVals.includes(child.name) ? 'active' : ''"
 										v-for="(child,cIdx) in item.children" :key="cIdx"
 										@click="selectAttrValue(index,cIdx)">
 										{{child.name}}
@@ -55,27 +56,39 @@
 		computed: {
 			...mapGetters(["proSpecsState", "detailData"]),
 			// 筛选属性值
-			attrVal(){
+			attrVals(){
 				return this.selectAttrVals.map(item => item.name)
 			},
 			// 未选择属性值的时候应该禁用确认按钮
 			confirmState(){
-				// let selectLength = this.selectAttrVals.length
-				// let sourceDataLength = this.detailData?.sku_select?.length
-				// return (selectLength == sourceDataLength ) ? false : true
 				return this.selectAttrVals.length != this.detailData?.sku_select?.length	
+			},
+			// 无属性商品添加购物车隐藏属性模块
+			selectShow(){
+				return this.detailData?.sku_select?.length ?? null
 			}
 		},
 		methods: {
 			// 属性选择确认
 			confirmSumit(){
+				// 深拷贝
+				let proItem = JSON.parse(JSON.stringify(this.detailData))
+				// 商品有属性值把选中的属性值赋址给商品
+				if(this.attrVals.length) proItem.attrVals = this.attrVals
+				
+				// 选规格页加购（给加购商品添加 boll，判断规格加购还是直接加购）
+				proItem.isSpecs = true 
+				
+				this.SET_PRO_CART_LIST({pro: proItem, num: this.numvalue})
 				this.onClose()
+				this.SET_DETAIL_START(false) 
 			},
-			...mapMutations(["SET_PRO_SPECS"]),
+			...mapMutations(["SET_PRO_SPECS","SET_DETAIL_START","SET_PRO_CART_LIST"]),
 			onClose(){
 				this.SET_PRO_SPECS(false)
 				// 选择属性以后 关闭弹窗就清空选择 保证下次选择都是未选状态
 				this.selectAttrVals = []
+				this.numvalue = 1
 			},
 			// 选择属性值
 			selectAttrValue(index, cIdx){

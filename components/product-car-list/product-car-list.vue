@@ -8,7 +8,8 @@
 				</view>
 				<scroll-view scroll-y="true" class="body">
 					<view class="scroll-content">
-						<view class="cart-item" v-for="item in proCarList" :key="item.id">
+						<!-- goodsid 保证直接加购唯一性、attrVals 保证选规格加购唯一性 -->
+						<view class="cart-item" v-for="item in proCarList" :key="item.goodsid+item.attrVals">
 							<product-cart-item :item="item"/>
 						</view>
 					</view>
@@ -20,7 +21,7 @@
 						<u-icon name="shopping-cart" color="#EC544F" size="34"></u-icon>
 						<view class="num">{{buyNum}}</view>
 					</view>
-					<view class="price">合计<text class="amount">￥{{totalPrice}}</text></view>
+					<view class="price">合计<text class="amount">￥{{priceFormat(totalPrice)}}</text></view>
 				</view>
 				<view class="submit-button">
 					<view class="btn disabled" v-if="!type" @click="goPay">选好了</view>
@@ -35,7 +36,8 @@
 </template>
 
 <script>
-	import {mapGetters, mapMutations} from 'vuex'
+	import {mapGetters} from 'vuex'
+	import {priceFormat} from '@/utils/tools.js'
 	export default {
 		name:"product-car-list",
 		props: {
@@ -54,6 +56,7 @@
 			...mapGetters(["proCarList", "totalPrice", "buyNum"])
 		},
 		methods: {
+			priceFormat,
 			confirmPay(){
 				console.log('点击了支付')
 			},
@@ -64,8 +67,7 @@
 			},
 			showCart(){
 				this.cartVisible = !this.cartVisible
-			},
-			...mapMutations(["setProCarList"])
+			}
 		}
 	}
 </script>

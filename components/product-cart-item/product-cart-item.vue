@@ -5,7 +5,7 @@
 		</view>
 		<view class="product-info">
 			<view class="product-title">{{item.name}}</view>
-			<view class="product-sku" v-if="false">辣条/包</view>
+			<view class="product-sku" v-if="item.attrVals">{{item.attrVals.join('/')}}</view>
 			<view class="product-price">
 				<view class="discount-price">￥{{priceFormat(item.price)}}</view>
 				<view v-if="item.before_price" class="original-price">￥{{priceFormat(item.before_price)}}</view>

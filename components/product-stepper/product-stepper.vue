@@ -30,9 +30,11 @@
 			} 
 		},
 		methods: {
-			...mapMutations(["setProCarList"]),
+			...mapMutations(["SET_PRO_CART_LIST"]),
 			updateNumvalue(e){
-				this.setProCarList({pro:this.item, num: e.value})
+				// 直接加购
+				this.item.isSpecs = false 
+				this.SET_PRO_CART_LIST({pro:this.item, num: e.value})
 			}
 		}
 	}
