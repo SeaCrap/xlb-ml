@@ -18,6 +18,18 @@ const getters = {
 			return prev += next.price*next.numvalue
 		},0)
 	},
+	
+	// 优惠了多少
+	preferentialPrice: state => {
+		let price = state.cars.proCarList.reduce((prev,next) => {
+			return prev += next.price*next.numvalue
+		},0)
+		let beforePrice = state.cars.proCarList.reduce((prev,next) => {
+			return prev += next.before_price*next.numvalue
+		},0)
+		return beforePrice - price
+	},
+	
 	buyNum: state => {
 		return state.cars.proCarList.reduce((prev,next) => {
 			return prev += next.numvalue

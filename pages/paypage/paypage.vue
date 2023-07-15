@@ -2,7 +2,10 @@
 	<view class="paypage">
 		<delivery-layout></delivery-layout>
 		<view class="goodsList">
-			<goods-list></goods-list>
+			<goods-list 
+				:goodsList="proCarList" 
+				:totalPrice="totalPrice"
+				:preferentialPrice="preferentialPrice"></goods-list>
 		</view>
 		
 		<!-- #ifndef MP-WEIXIN -->
@@ -24,6 +27,7 @@
 </template>
 
 <script>
+	import {mapGetters} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -49,6 +53,9 @@
 					}
 				]
 			};
+		},
+		computed: {
+			...mapGetters(["proCarList","totalPrice","preferentialPrice"])
 		},
 		methods: {
 			clickPay(value){
