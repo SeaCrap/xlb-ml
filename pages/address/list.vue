@@ -5,7 +5,11 @@
 			<navigator class="add-address-content" url="/pages/address/edit">+ 添加地址</navigator>
 		</view>
 		<view class="list">
-			<view class="item" v-for="item in userAddressList" :key="item._id">
+			<view 
+				class="item" 
+				v-for="item in userAddressList" :key="item._id" 
+				@longpress="editAddress(item._id)"
+				@click="selectedAddress(item)">
 				<view class="header">
 					<view class="user">{{item.username}}-{{item.mobile}}</view>
 					<view class="select">
@@ -34,6 +38,22 @@
 			this.getAddressList()
 		},
 		methods: {
+			// 用户选择地址
+			selectedAddress(item){
+				let {address,are_name,username,mobile} = item
+				let deliveryInfo = {
+					address: are_name + address,
+					username,
+					mobile
+				}
+				uni.$emit("updateValue",deliveryInfo)
+				uni.navigateBack()
+			},
+			editAddress(id){
+				uni.navigateTo({
+					url: "./edit?id=" + id
+				})
+			},
 			async setDefaultAddress(id){
 				let res = await addressCloudObj.updateAddress(id)
 				this.getAddressList()		

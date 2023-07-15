@@ -1,5 +1,5 @@
 const db = uniCloud.database()
-const selfUtils = require("self-tuils")
+const selfUtils = require("self-uils")
 
 module.exports = {
 	_before: async function () { 
@@ -38,5 +38,33 @@ module.exports = {
 		return await db.collection("xlb-mall-address").doc(id).update({
 			selected: true
 		})
+	},
+	async getOne(addressId){
+		if(!this.userInfo.uid) return this.userInfo
+		return await db.collection("xlb-mall-address").doc(addressId).get()
+	},
+	async updateOne(data){
+		if(!this.userInfo.uid) return this.userInfo
+		
+		data.user_id = this.userInfo.uid
+		data.time = Date.now()
+		
+		if(data.selected){
+			await db.collection("xlb-mall-address").where({
+				user_id: this.userInfo.uid
+			}).update({selected: false})
+		}
+		// data 传过来有 id 不能修改
+		let _data = {...data}
+		let id = _data._id
+		delete _data._id
+		return await db.collection("xlb-mall-address").doc(id).update(_data)
+	},
+	async getDefaultAddress(){
+		if(!this.userInfo.uid) return this.userInfo
+		return await db.collection("xlb-mall-address").where({
+			user_id: this.userInfo.uid,
+			selected: true
+		}).get()
 	}
 }

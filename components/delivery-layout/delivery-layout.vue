@@ -8,7 +8,7 @@
 					<view v-if="deliveryInfo.address">
 						<view class="detail-address">{{deliveryInfo.address}}</view>
 						<view class="user-info">
-							{{deliveryInfo.username + '-' + deliveryInfo.mobile}}
+							{{deliveryInfo.username}}：{{deliveryInfo.mobile}}
 						</view>
 					</view>
 					<view v-else class="add-address-text">请添加收货地址</view>
@@ -24,14 +24,17 @@
 <script>
 	export default {
 		name:"delivery-layout",
-		data() {
-			return {
-				deliveryInfo: {
-					address: "河南省郑州市管城区xx路xx号",
-					username: "李四",
-					mobile: 18888888888
+		props: {
+			deliveryInfo: {
+				type: Object,
+				default(){
+					return {
+						address: "",
+						username: "",
+						mobile: ""
+					}
 				}
-			};
+			}
 		},
 		methods: {
 			addAddress(){
@@ -67,7 +70,8 @@
 				flex: 1;
 				padding: 0 30rpx;
 				font-size: 30rpx;
-				.user-info {padding-top: 10rpx;}
+				.detail-address {font-size: 28rpx; line-height: 34rpx;}
+				.user-info {font-size: 24rpx;line-height: 30rpx;padding-top: 10rpx;}
 				.add-address-text {}
 			}
 		}

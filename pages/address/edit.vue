@@ -24,8 +24,9 @@
 						popup-title="请选择所在地区" 
 						collection="opendb-city-china" 
 						field="code as value, name as text" 
-						orderby="value asc" :step-searh="true" 
-						self-field="code" parent-field="parent_code"
+						orderby="value asc" 
+						self-field="code" 
+						parent-field="parent_code"
 						@change="pickerChange">
 				</uni-data-picker>   
 			 </u-form-item>
@@ -50,13 +51,14 @@
 </template>
 
 <script>
-	const addressCloudObj = uniCloud.importObject("xlb-mall-address")
+	const addressCloudObj = uniCloud.importObject("xlb-mall-address", {"customUI":true})
+	let addressId
 	export default {
 		data() {
 			return {
 				addressFrom: {
 					username: "",
-					mobile: "19000000000",
+					mobile: "",
 					address: "",
 					selected: false,
 					ared_code: "",
@@ -100,7 +102,16 @@
 				}
 			}
 		},
+		onLoad(e) {
+			addressId = e?.id ?? null
+			if(addressId) this.editOneAddressInfo()
+		},
 		methods: {
+			// 编辑某条地址信息
+			async editOneAddressInfo(){
+				let res = await addressCloudObj.getOne(addressId)
+				this.addressFrom = res.data[0]
+			},
 			// 地区选择事件
 			pickerChange(e){
 				let are_name = e.detail.value.map(item => {
@@ -109,16 +120,22 @@
 				this.addressFrom.are_name = are_name.join("")
 			},
 			onSubmit(){
-				this.$refs.uForm.validate().then(res => {
-					addressCloudObj.add(this.addressFrom).then(res => {
-						uni.showToast({
-							title: "添加成功",
-							mask: true
-						})
-						setTimeout(() => {
-							uni.navigateBack()
-						},1000)
+				this.$refs.uForm.validate().then( async res => {
+					let title
+					if(this.addressFrom._id){
+						let data = await addressCloudObj.updateOne(this.addressFrom)
+						title = "修改成功"
+					}else {
+						let data = await addressCloudObj.add(this.addressFrom)
+							title = "添加成功"
+					}					
+					uni.showToast({
+						title,
+						mask: true
 					})
+					setTimeout(() => {
+						uni.navigateBack()
+					},1000)	
 				}).catch(errors => {
 					uni.$u.toast('校验失败')
 				})

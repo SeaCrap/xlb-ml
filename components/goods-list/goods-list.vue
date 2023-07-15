@@ -9,7 +9,7 @@
 						<image :src="item.thumb[0].url" class="img" mode="aspectFill"></image>
 						<view class="name">{{item.name}}</view>
 					</view>
-					<view class="center">{{item.numvalue}}</view>
+					<view class="center">x{{item.numvalue}}</view>
 					<view class="right">
 						<view class="big">￥{{priceFormat(item.price)}}</view>
 						<view v-if="item.before_price" class="small">￥{{priceFormat(item.before_price)}}</view>

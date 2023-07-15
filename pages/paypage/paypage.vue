@@ -1,6 +1,6 @@
 <template>
 	<view class="paypage">
-		<delivery-layout></delivery-layout>
+		<delivery-layout :deliveryInfo="deliveryInfo"></delivery-layout>
 		<view class="goodsList">
 			<goods-list 
 				:goodsList="proCarList" 
@@ -21,16 +21,22 @@
 		</view>
 		<!-- #endif -->
 		<view class="payTabbar">
-			<product-car-list :type="isPay"></product-car-list>
+			<product-car-list :type="isPay" :payBtnState="payBtnState"></product-car-list>
 		</view>
 	</view>
 </template>
 
 <script>
 	import {mapGetters} from 'vuex'
+	const addressCloudObj = uniCloud.importObject("xlb-mall-address")
 	export default {
 		data() {
 			return {
+				deliveryInfo: {
+					address: "",
+					username: "",
+					mobile: ""
+				},
 				isPay: true,
 				// #ifdef APP-PLUS || H5
 				payDefaultValue: "alipay",
@@ -55,11 +61,37 @@
 			};
 		},
 		computed: {
-			...mapGetters(["proCarList","totalPrice","preferentialPrice"])
+			...mapGetters(["proCarList","totalPrice","preferentialPrice"]),
+			// 支付按钮状态
+			payBtnState(){
+				// 严谨判断确认订单页面
+				let bool = Object.keys(this.deliveryInfo).every(item => {
+					return this.deliveryInfo[item] != ""
+				})
+				return this.proCarList.length > 0 && this.totalPrice > 0 && bool
+			}
+		},
+		onLoad() {
+			this.getDefaultAddress()
+			uni.$on("updateValue", (e) => {
+				this.deliveryInfo = e
+			})
+		},
+		onUnload() {
+			uni.$off("updateValue")
 		},
 		methods: {
+			async getDefaultAddress(){
+				let res = await addressCloudObj.getDefaultAddress()
+				if(!res.data.length) return
+				let {address,are_name,username,mobile} = res.data[0]
+				this.deliveryInfo = {
+					address: are_name + address,
+					username,
+					mobile
+				}
+			},
 			clickPay(value){
-				console.log(value)
 				this.payDefaultValue = value
 			}
 		}

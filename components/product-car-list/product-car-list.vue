@@ -24,8 +24,8 @@
 					<view class="price">合计<text class="amount">￥{{priceFormat(totalPrice)}}</text></view>
 				</view>
 				<view class="submit-button">
-					<view class="btn disabled" v-if="!type" @click="goPay">选好了</view>
-					<view v-else class="btn" @click="confirmPay">支付</view>
+					<view class="btn" v-if="!type" @click="goPay">选好了</view>
+					<view v-else class="btn" :class="payBtnState ? '' : 'disabled'"  @click="confirmPay">支付</view>
 				</view>
 			</view>
 			<!-- ios 安全区域	 -->
@@ -45,6 +45,10 @@
 			pro: {
 				type: Object,
 				default: () => {}
+			},
+			payBtnState: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -65,6 +69,7 @@
 			},
 			priceFormat,
 			confirmPay(){
+				if(!this.payBtnState) return
 				console.log('点击了支付')
 			},
 			goPay(){
@@ -152,7 +157,7 @@
 				color: #fff;
 				border-radius: 10rpx;
 				&.disabled {
-					// opacity: 0.6;
+					opacity: 0.6;
 				}
 			}
 		}
