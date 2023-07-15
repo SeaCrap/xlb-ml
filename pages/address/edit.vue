@@ -17,6 +17,19 @@
 				</u--input>
 			</u-form-item>
 			
+			 <u-form-item label="选择省市区">
+				  <uni-data-picker 
+						v-model="addressFrom.ared_code"
+						placeholder="请选择地址" 
+						popup-title="请选择所在地区" 
+						collection="opendb-city-china" 
+						field="code as value, name as text" 
+						orderby="value asc" :step-searh="true" 
+						self-field="code" parent-field="parent_code"
+						@change="pickerChange">
+				</uni-data-picker>   
+			 </u-form-item>
+			
 			<u-form-item label="详细地址" prop="address">
 				<u--input v-model="addressFrom.address" placeholder="请输入街道门牌号">					
 				</u--input>
@@ -44,7 +57,9 @@
 					username: "",
 					mobile: "",
 					address: "",
-					selected: false
+					selected: false,
+					ared_code: "",
+					are_name: []
 				},
 				addressRules: {
 					username: [
@@ -85,9 +100,17 @@
 			}
 		},
 		methods: {
+			// 地区选择事件
+			pickerChange(e){
+				let are_name = e.detail.value.map(item => {
+					return item.text
+				})
+				this.addressFrom.are_name = are_name.join("")
+			},
 			onSubmit(){
 				this.$refs.uForm.validate().then(res => {
 					uni.$u.toast('校验通过')
+					console.log(this.addressFrom)
 				}).catch(errors => {
 					uni.$u.toast('校验失败')
 				})
