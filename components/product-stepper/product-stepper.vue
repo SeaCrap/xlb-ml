@@ -1,11 +1,11 @@
 <template>
 	<view class="product-stepper">
-		<u-number-box v-model="dataItem.numvalue" min="0" max="99" @change="updateNumvalue">
-			<view slot="minus" class="minus numbtn" :class="dataItem.numvalue <=0 ? 'none' : ''">
+		<u-number-box v-model="item.numvalue" min="0" max="99" @change="updateNumvalue">
+			<view slot="minus" class="minus numbtn" :class="item.numvalue <=0 ? 'none' : ''">
 				  <u-icon name="minus" size="12" color="#ccc"></u-icon>
 				</view>
-				<text slot="input" class="input" :class="dataItem.numvalue <=0 ? 'none' : ''">
-					{{dataItem.numvalue}}
+				<text slot="input" class="input" :class="item.numvalue <=0 ? 'none' : ''">
+					{{item.numvalue}}
 				</text>
 				<view slot="plus" class="plus numbtn">
 				  <u-icon name="plus" size="12" color="#fff"></u-icon>
@@ -18,11 +18,6 @@
 	import {mapMutations} from 'vuex'
 	export default {
 		name:"product-stepper",
-		data(){
-			return {
-				dataItem: this.item
-			}
-		},
 		props: {
 			item: {
 				type: Object,

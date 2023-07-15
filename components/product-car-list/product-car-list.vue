@@ -9,7 +9,7 @@
 				<scroll-view scroll-y="true" class="body">
 					<view class="scroll-content">
 						<!-- goodsid 保证直接加购唯一性、attrVals 保证选规格加购唯一性 -->
-						<view class="cart-item" v-for="item in proCarList" :key="item.goodsid+item.attrVals">
+						<view class="cart-item" v-for="item in proCarList" :key="carKey(item)">
 							<product-cart-item :item="item"/>
 						</view>
 					</view>
@@ -56,6 +56,9 @@
 			...mapGetters(["proCarList", "totalPrice", "buyNum"])
 		},
 		methods: {
+			carKey(item){
+				return item.goodsid+JSON.stringify(item.attrVals)
+			},
 			...mapMutations(["SET_PRO_CART_LIST"]),
 			clearCart (){
 				this.SET_PRO_CART_LIST()
