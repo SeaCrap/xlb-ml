@@ -50,12 +50,13 @@
 </template>
 
 <script>
+	const addressCloudObj = uniCloud.importObject("xlb-mall-address")
 	export default {
 		data() {
 			return {
 				addressFrom: {
 					username: "",
-					mobile: "",
+					mobile: "19000000000",
 					address: "",
 					selected: false,
 					ared_code: "",
@@ -109,8 +110,15 @@
 			},
 			onSubmit(){
 				this.$refs.uForm.validate().then(res => {
-					uni.$u.toast('校验通过')
-					console.log(this.addressFrom)
+					addressCloudObj.add(this.addressFrom).then(res => {
+						uni.showToast({
+							title: "添加成功",
+							mask: true
+						})
+						setTimeout(() => {
+							uni.navigateBack()
+						},1000)
+					})
 				}).catch(errors => {
 					uni.$u.toast('校验失败')
 				})
