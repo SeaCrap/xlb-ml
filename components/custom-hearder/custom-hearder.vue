@@ -30,7 +30,7 @@
 					</view>
 					<view class="code">
 						<view class="pic">
-							<image class="img" src="../../static/logo.png" mode="scaleToFill"></image>
+							<image class="img" src="../../static/logo.png" mode="aspectFill"></image>
 						</view>
 						<text class="pay">付款</text>
 					</view>

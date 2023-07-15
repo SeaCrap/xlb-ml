@@ -38,7 +38,7 @@
 									class="pro-item" 
 									v-for="pro in item.proGroup" 
 									:key="pro._id">
-									<product-item :pro="pro"/>
+									<product-item :pro="pro"></product-item>
 								</view>
 							</view>
 						</view>
@@ -47,10 +47,10 @@
 			</view>
 		</view>
 		
-		<product-car-list v-if="buyNum > 0" />
+		<product-car-list v-if="buyNum > 0"></product-car-list>
 		
-		<pro-detail-popup />
-		<pro-select-specss />
+		<pro-detail-popup></pro-detail-popup>
+		<pro-select-specss></pro-select-specss>
 	</view>
 </template>
 
@@ -98,6 +98,7 @@ import productItemVue from '../../components/product-item/product-item.vue'
 			async getGoodsList(){
 				let res = await goodsCloudObj.getList()
 				this.goodsList = res
+				console.log(res)
 				this.setNumValue()
 			},
 			// 购买数量购物车和首页数据

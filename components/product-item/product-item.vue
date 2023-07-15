@@ -26,7 +26,7 @@
 					选规格
 				</view>
 				<view class="uiNumber" v-else>
-					<product-stepper :item="pro"/>
+					<product-stepper :item="pro"></product-stepper>
 				</view>
 			</view>
 		</view>
