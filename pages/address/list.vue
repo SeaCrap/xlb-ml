@@ -5,26 +5,43 @@
 			<navigator class="add-address-content" url="/pages/address/edit">+ 添加地址</navigator>
 		</view>
 		<view class="list">
-			<view class="item" v-for="item in 3" :key="item">
+			<view class="item" v-for="item in userAddressList" :key="item._id">
 				<view class="header">
-					<view class="user">李四-18888888888</view>
+					<view class="user">{{item.username}}-{{item.mobile}}</view>
 					<view class="select">
-						<u-button v-if="false" plain type="primary" size="mini" color="#EC544F" text="默认地址"></u-button>
-						<u-button v-else plain size="mini" color="#666" text="设为默认"></u-button>
+						<u-button v-if="item.selected" plain type="primary" size="mini" color="#EC544F" text="默认地址"></u-button>
+						<u-button 
+							v-else plain size="mini" 
+							color="#666" text="设为默认"
+							@click="setDefaultAddress(item._id)"></u-button>
 					</view>
 				</view>
-				<view class="more">河南省郑州市管城区XX路XX号</view>
+				<view class="more">{{item.are_name + item.address}}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	const addressCloudObj = uniCloud.importObject("xlb-mall-address")
 	export default {
-		data() {
+		data(){
 			return {
-				
-			};
+				userAddressList: []
+			}
+		},
+		onShow() {
+			this.getAddressList()
+		},
+		methods: {
+			async setDefaultAddress(id){
+				let res = await addressCloudObj.updateAddress(id)
+				this.getAddressList()		
+			},	
+			async getAddressList(){
+				let res = await addressCloudObj.getList()
+				this.userAddressList = res.data
+			}
 		}
 	}
 </script>

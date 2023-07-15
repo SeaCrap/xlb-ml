@@ -21,5 +21,22 @@ module.exports = {
 		}
 		// 添加
 		return await db.collection("xlb-mall-address").add(data)
+	},
+	async getList(){
+		if(!this.userInfo.uid) return this.userInfo
+		return await db.collection("xlb-mall-address").where({
+			user_id: this.userInfo.uid
+		}).orderBy("selected","desc").orderBy("time","desc").get()
+	},
+	async updateAddress(id){
+		if(!this.userInfo.uid) return this.userInfo
+		await db.collection("xlb-mall-address").where({
+			user_id: this.userInfo.uid
+		}).update({
+			selected: false
+		})
+		return await db.collection("xlb-mall-address").doc(id).update({
+			selected: true
+		})
 	}
 }
