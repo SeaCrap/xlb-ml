@@ -39,6 +39,7 @@
 <script>
 	import {mapGetters} from 'vuex'
 	const addressCloudObj = uniCloud.importObject("xlb-mall-address")
+	const orderCloudObj = uniCloud.importObject("xlb-mall-order")
 	export default {
 		data() {
 			return {
@@ -92,14 +93,26 @@
 		},
 		methods: {
 			// 发起支付
-			onConfirmPay(){
+			async onConfirmPay(){
+				let obj = {
+					deliveryInfo: this.deliveryInfo,
+					proCarList: this.proCarList,
+					createTime: Date.now(),
+					payType: this.payDefaultValue,
+					state: 0,
+					total_fee: this.totalPrice,
+					isPay: false
+				}
+				let order_no = await orderCloudObj.createOrder(obj)
+				let out_trade_no =  order_no + String(Math.random()).substring(3,9)	
+				
 				this.$refs.uniPay.createOrder({
 					provider: this.payDefaultValue, // 支付供应商
-					total_fee: totalPrice, // 支付金额，单位分 100 = 1元
+					total_fee: this.totalPrice, // 支付金额，单位分 100 = 1元
 					type: "text", // 支付回调类型
-					order_no: "20221027011000101001010", // 业务系统订单号
-					out_trade_no: "2022102701100010100101001", // 插件支付单号
-					description: "uniCloud个人版包月套餐", // 支付描述
+					order_no, // 业务系统订单号
+					out_trade_no, // 插件支付单号
+					description: "购买商品支付", // 支付描述
 				})
 			},
 			paySuccess(e){

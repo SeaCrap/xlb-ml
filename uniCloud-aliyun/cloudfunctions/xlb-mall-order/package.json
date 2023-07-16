@@ -1,0 +1,9 @@
+{
+  "name": "xlb-mall-order",
+  "dependencies": {
+    "self-uils": "file:../common/self-uils"
+  },
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}
