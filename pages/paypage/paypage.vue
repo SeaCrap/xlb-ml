@@ -21,8 +21,18 @@
 		</view>
 		<!-- #endif -->
 		<view class="payTabbar">
-			<product-car-list :type="isPay" :payBtnState="payBtnState"></product-car-list>
+			<product-car-list 
+				:type="isPay" 
+				:payBtnState="payBtnState"
+				@confirmPay="onConfirmPay"></product-car-list>
 		</view>
+		
+		<uni-pay 
+			ref="uniPay" 
+			returnUrl="/pages/order/order"
+			@success="paySuccess"
+			@cancel="payCancel"
+			@create="payCreate"></uni-pay>
 	</view>
 </template>
 
@@ -81,6 +91,26 @@
 			uni.$off("updateValue")
 		},
 		methods: {
+			// 发起支付
+			onConfirmPay(){
+				this.$refs.uniPay.createOrder({
+					provider: this.payDefaultValue, // 支付供应商
+					total_fee: totalPrice, // 支付金额，单位分 100 = 1元
+					type: "text", // 支付回调类型
+					order_no: "20221027011000101001010", // 业务系统订单号
+					out_trade_no: "2022102701100010100101001", // 插件支付单号
+					description: "uniCloud个人版包月套餐", // 支付描述
+				})
+			},
+			paySuccess(e){
+				console.log(e)
+			},
+			payCancel(e){
+				console.log(e)
+			},
+			payCreate(){
+				console.log(e) 
+			},
 			async getDefaultAddress(){
 				let res = await addressCloudObj.getDefaultAddress()
 				if(!res.data.length) return

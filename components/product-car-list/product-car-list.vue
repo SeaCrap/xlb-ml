@@ -70,7 +70,7 @@
 			priceFormat,
 			confirmPay(){
 				if(!this.payBtnState) return
-				console.log('点击了支付')
+				this.$emit("confirmPay")
 			},
 			goPay(){
 				uni.navigateTo({
